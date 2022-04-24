@@ -1,6 +1,7 @@
 import { UniversityPersistence } from '../entities/university.persistence';
 import { University } from '../../domain/entities/university.entity';
 import { UniversityDto } from '../../application/dtos/university.dto';
+import { PaginatedFindResult } from '../../../shared/core/PaginatedFindResult';
 
 export class UniversityMapper {
   public static PersistToDomain(persist: UniversityPersistence): University {
@@ -37,6 +38,15 @@ export class UniversityMapper {
       createdAt: domain.createdAt,
       updatedAt: domain.updatedAt,
 
+    };
+  }
+
+  public static PaginatedToDto(pag: PaginatedFindResult<University>): PaginatedFindResult<UniversityDto> {
+    return {
+      items: pag.items.map(this.DomainToDto),
+      limit: pag.limit,
+      totalPages: pag.totalPages,
+      currentPage: pag.currentPage,
     };
   }
 }

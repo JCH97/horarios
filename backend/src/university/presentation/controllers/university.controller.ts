@@ -36,12 +36,12 @@ export class UniversityController {
 
   }
 
-  @Get()
+  @Post()
   async getAllPaginated(@Body() body: UniversityPaginatedDto, @Response() res) {
     this._logger.log('Paginated');
 
     const pag = await this.paginatedUniversity.execute(body);
-    return ProcessResponse.setResponse(res, pag, (a) => a);
+    return ProcessResponse.setResponse(res, pag, UniversityMapper.PaginatedToDto);
   }
 
   // @UseGuards(JwtAuthGuard)
