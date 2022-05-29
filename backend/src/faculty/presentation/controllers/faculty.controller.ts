@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response } from '@nestjs/common';
 import {
   CreateFacultyUseCase,
+  FindAllFacultyUseCase,
   FindByIdFacultyUseCase,
   PaginatedFacultyUseCase,
   RemoveFacultyUseCase,
@@ -12,6 +13,7 @@ import { FacultyPaginatedDto } from '../../application/dtos/faculty.paginated.dt
 import { FacultyUpdateDto } from '../../application/dtos/faculty.update.dto';
 import { FacultyCreateDto } from '../../application/dtos/faculty.create.dto';
 import { FacultyMappers } from '../../infra/mappers/faculty.mappers';
+import { FacultyFindAllDto } from '../../application/dtos/faculty.find-all.dto';
 
 @Controller('faculty')
 export class FacultyController {
@@ -23,7 +25,8 @@ export class FacultyController {
     private readonly createFaculty: CreateFacultyUseCase,
     private readonly updateFaculty: UpdateFacultyUseCase,
     private readonly removeFaculty: RemoveFacultyUseCase,
-    private readonly paginatedFaculty: PaginatedFacultyUseCase) {
+    private readonly paginatedFaculty: PaginatedFacultyUseCase,
+    private readonly findAllFaculty: FindAllFacultyUseCase) {
 
     this._logger = new Logger('FacultyController');
   }
@@ -43,6 +46,16 @@ export class FacultyController {
 
     const pag = await this.paginatedFaculty.execute(body);
     return ProcessResponse.setResponse(res, pag, (a) => a);
+  }
+
+  F;
+
+  @Post('all')
+  async getAll(@Body() body: FacultyFindAllDto, @Response() res) {
+    this._logger.log('Get All');
+
+    const ans = await this.findAllFaculty.execute(body);
+    return ProcessResponse.setResponse(res, ans, FacultyMappers.AllToDto);
   }
 
   // @UseGuards(JwtAuthGuard)
