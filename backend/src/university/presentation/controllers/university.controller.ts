@@ -1,6 +1,7 @@
 import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response } from '@nestjs/common';
 import {
   CreateUniversityUseCase,
+  FindAllUniversityUseCase,
   FindByIdUniversityUseCase,
   RemoveUniversityUseCase,
   UpdateUniversityUseCase,
@@ -12,6 +13,7 @@ import { University } from '../../domain/entities/university.entity';
 import { UniversityUpdateDto } from '../../application/dtos/university.update.dto';
 import { PaginatedUniversityUseCase } from '../../application/useCases/university.paginated.use-case';
 import { UniversityPaginatedDto } from '../../application/dtos/university.paginated.dto';
+import { UniversityFindAllDto } from '../../application/dtos/university.find-all.dto';
 
 @Controller('university')
 export class UniversityController {
@@ -23,7 +25,8 @@ export class UniversityController {
     private readonly createUniversity: CreateUniversityUseCase,
     private readonly updateUniversity: UpdateUniversityUseCase,
     private readonly removeUniversity: RemoveUniversityUseCase,
-    private readonly paginatedUniversity: PaginatedUniversityUseCase) {
+    private readonly paginatedUniversity: PaginatedUniversityUseCase,
+    private readonly findAllUniversity: FindAllUniversityUseCase) {
     this._logger = new Logger('UniversityController');
   }
 
@@ -34,6 +37,14 @@ export class UniversityController {
     const university = await this.findOneUseCase.execute({ id: params.id });
     return ProcessResponse.setResponse<University>(res, university, UniversityMapper.DomainToDto);
 
+  }
+
+  @Post('all')
+  async getAll(@Body() body: UniversityFindAllDto, @Response() res) {
+    this._logger.log('Get All');
+
+    const ans = await this.findAllUniversity.execute(body);
+    return ProcessResponse.setResponse(res, ans, UniversityMapper.PaginatedToDto);
   }
 
   @Post()
