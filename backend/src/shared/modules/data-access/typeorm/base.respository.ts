@@ -6,7 +6,8 @@ import { Logger, Type } from '@nestjs/common';
 import { PersistentEntity } from './base.entity';
 import { IEntity } from 'src/shared/core/interfaces/IEntity';
 import { PageParams } from '../../../core/PaginatorParams';
-import { PaginatedFindResult } from '../../../core/PaginatedFindResult';
+import { getDefaultPaginatedFindResult, PaginatedFindResult } from '../../../core/PaginatedFindResult';
+import { FindAllResult } from '../../../core/FindAllResult';
 
 export abstract class BaseRepository<E extends IEntity,
   P extends PersistentEntity> implements IRepository<E> {
@@ -65,6 +66,22 @@ export abstract class BaseRepository<E extends IEntity,
     return this._persistToDomainFunc(ans);
   }
 
+  async findAll(filter: {}): Promise<FindAllResult<E>> {
+    this._logger.log('Find All');
+
+    const count = await this.count(filter);
+
+    if (count == 0) return getDefaultPaginatedFindResult();
+
+    const ans = await this._entityRepository.find({
+      where: filter,
+    });
+
+    return {
+      items: ans.map(this._persistToDomainFunc),
+    };
+  }
+
   async findOne(filter: {}): Promise<E> {
     this._logger.log(`Find`);
     console.log(filter);
@@ -80,6 +97,44 @@ export abstract class BaseRepository<E extends IEntity,
   async count(filter: {}): Promise<number> {
     this._logger.log('Count');
     return await this._entityRepository.count(filter);
+  }
+
+  async getPaginated(paginatorParams: PageParams, filter: {}): Promise<PaginatedFindResult<E>> {
+    this._logger.log('Paginated');
+
+    const count = await this.count(filter);
+
+    if (count == 0) return getDefaultPaginatedFindResult();
+
+    const pageLimit: number =
+      paginatorParams.pageLimit < count
+        ? paginatorParams.pageLimit
+        : count;
+    const totalPages: number = Math.ceil(count / pageLimit);
+    const currentPage: number =
+      paginatorParams.pageNum < totalPages
+        ? paginatorParams.pageNum
+        : totalPages;
+
+    const pageNum: number =
+      paginatorParams.pageNum < totalPages
+        ? paginatorParams.pageNum
+        : totalPages;
+
+    const findOffset = pageLimit * (pageNum - 1);
+
+    const entities = await this._entityRepository.find({
+      where: filter,
+      skip: findOffset,
+      take: pageLimit,
+    });
+
+    return {
+      items: entities.map(this._persistToDomainFunc),
+      limit: pageLimit,
+      currentPage,
+      totalPages,
+    };
   }
 
   /**
