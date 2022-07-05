@@ -54,6 +54,8 @@ export class ClassMappers {
       priority: domain.priority,
       createdAt: domain.createdAt,
       updatedAt: domain.updatedAt,
+      end: domain.end,
+      start: domain.start,
     };
   }
 
