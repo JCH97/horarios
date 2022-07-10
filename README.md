@@ -2,10 +2,9 @@
 
 ##### Sistema de gestion de horarios de la facultad de matemática.
 
-#### Autores:
+#### Autor:
 
 - Jose Carlos Hernandez
-- Yan Carlos Gonzalez
 
 Tutor: Pedro Quintero Rojas
 
