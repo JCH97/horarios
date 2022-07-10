@@ -46,6 +46,7 @@ export class DepartmentMappers {
       priority: domain.priority,
       createdAt: domain.createdAt,
       updatedAt: domain.updatedAt,
+      facultyId: domain.facultyId,
     };
   }
 
@@ -63,8 +64,8 @@ export class DepartmentMappers {
 
     return {
       ...base,
-      teachers: domain.teachers ? domain.teachers.map(t => TeacherMappers.DomainToDto(t)) : [],
-      faculty: domain.faculty ? FacultyMappers.DomainToDto(domain.faculty) : null,
+      teachers: domain.teachers ? domain.teachers.map(t => TeacherMappers.DomainToDetails(t)) : [],
+      faculty: domain.faculty ? FacultyMappers.DomainToDetails(domain.faculty) : null,
     };
   }
 }

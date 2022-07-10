@@ -1,6 +1,6 @@
 import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response } from '@nestjs/common';
 import {
-  CreateDepartmentUseCase,
+  CreateDepartmentUseCase, FindAllDepartmentUseCase,
   FindByIdDepartmentUseCase,
   FindDetailsDepartmentUseCase,
   PaginatedDepartmentUseCase,
@@ -13,6 +13,9 @@ import { DepartmentPaginatedDto } from '../../application/dtos/department.pagina
 import { DepartmentUpdateDto } from '../../application/dtos/department.update.dto';
 import { DepartmentCreateDto } from '../../application/dtos/department.create.dto';
 import { DepartmentMappers } from '../../infra/mappers/department.mappers';
+import { UniversityFindAllDto } from '../../../university/application/dtos/university.find-all.dto';
+import { UniversityMapper } from '../../../university/infra/mappers/university.mapper';
+import { DepartmentFindAllDto } from '../../application/dtos/department.get-all.dto';
 
 @Controller('department')
 export class DepartmentController {
@@ -25,7 +28,8 @@ export class DepartmentController {
     private readonly updateDepartment: UpdateDepartmentUseCase,
     private readonly removeDepartment: RemoveDepartmentUseCase,
     private readonly paginatedDepartment: PaginatedDepartmentUseCase,
-    private readonly findDetailsDepartment: FindDetailsDepartmentUseCase) {
+    private readonly findDetailsDepartment: FindDetailsDepartmentUseCase,
+    private readonly findAllDepartment: FindAllDepartmentUseCase) {
 
     this._logger = new Logger('DepartmentController');
   }
@@ -53,6 +57,15 @@ export class DepartmentController {
 
     const pag = await this.paginatedDepartment.execute(body);
     return ProcessResponse.setResponse(res, pag, DepartmentMappers.PaginatedToDto);
+  }
+
+
+  @Post('all')
+  async getAll(@Body() body: DepartmentFindAllDto, @Response() res) {
+    this._logger.log('Get All');
+
+    const ans = await this.findAllDepartment.execute(body);
+    return ProcessResponse.setResponse(res, ans, DepartmentMappers.PaginatedToDto);
   }
 
   // @UseGuards(JwtAuthGuard)
