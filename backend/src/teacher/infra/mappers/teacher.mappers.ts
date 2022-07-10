@@ -4,6 +4,8 @@ import { PaginatedFindResult } from '../../../shared/core/PaginatedFindResult';
 import { TeacherDto } from '../../application/dtos/teacher.dto';
 import { TeacherDetailsDto } from '../../application/dtos/teacher.details.dto';
 import { FacultyMappers } from '../../../faculty/infra/mappers/faculty.mappers';
+import { Department } from '../../../department/domain/entities/department.entity';
+import { DepartmentMappers } from '../../../department/infra/mappers/department.mappers';
 
 export class TeacherMappers {
   public static PersistToDomain(persist: TeacherPersistence): Teacher {
@@ -11,6 +13,9 @@ export class TeacherMappers {
       ...persist,
       faculties:
         persist.faculties ? persist.faculties.map(f => FacultyMappers.PersistToDomain(f)) : [],
+      department:
+        persist.department ? DepartmentMappers.PersistToDomain(persist.department) : null,
+      departmentId: { id: persist.departmentId },
     }, persist.id);
 
     if (domain.isFailure)
@@ -31,6 +36,7 @@ export class TeacherMappers {
       updatedAt: domain.updatedAt,
       email: domain.email,
       faculties: domain.facultyIds,
+      department: domain.departmentId,
     };
   }
 
@@ -44,6 +50,7 @@ export class TeacherMappers {
       createdAt: domain.createdAt,
       updatedAt: domain.updatedAt,
       email: domain.email,
+      departmentId: domain.departmentId,
     };
   }
 
@@ -61,7 +68,8 @@ export class TeacherMappers {
 
     return {
       ...base,
-      faculties: domain.faculties ? domain.faculties.map(f => FacultyMappers.DomainToDto(f)) : [],
+      faculties: domain.faculties ? domain.faculties.map(f => FacultyMappers.DomainToDetails(f)) : [],
+      department: domain.department ? DepartmentMappers.DomainToDetails(domain.department) : null,
     };
   }
 }

@@ -4,11 +4,14 @@ import { DomainEntity } from '../../../shared/domain/entity.abstract';
 import { Result } from '../../../shared/core/Result';
 import { UniqueEntityID } from '../../../shared/domain/UniqueEntityID';
 import { Faculty } from '../../../faculty/domain/entities/faculty.entity';
+import { Department } from '../../../department/domain/entities/department.entity';
 
 type TeacherProps = DomainBaseProps & DomainTimestamp & {
   email: string;
   facultyIds?: { id: string }[];
   faculties?: Faculty[];
+  departmentId?: { id: string }
+  department?: Department;
 };
 
 type newTeacherProps = Omit<TeacherProps, 'id' | 'createdAt' | 'updatedAt'>;
@@ -37,6 +40,14 @@ export class Teacher extends DomainEntity<TeacherProps> {
 
   get fullName(): string {
     return this.props.fullName;
+  }
+
+  get departmentId(): { id: string } {
+    return this.props.departmentId;
+  }
+
+  get department(): Department {
+    return this.props.department;
   }
 
   get description(): string {
@@ -82,6 +93,7 @@ export class Teacher extends DomainEntity<TeacherProps> {
     this.props.description = props.description ?? this.props.description;
     this.props.fullName = props.fullName ?? this.props.fullName;
     this.props.shortName = props.shortName ?? this.props.shortName;
+    this.props.departmentId = props.departmentId ?? this.props.departmentId;
 
     this.props.updatedAt = new Date();
   }

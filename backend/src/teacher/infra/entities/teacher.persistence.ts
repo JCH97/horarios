@@ -27,4 +27,26 @@ export class TeacherPersistence extends PersistentEntity {
   )
   @JoinTable()
   faculties: FacultyPersistence[] | any;
+
+  @OneToOne(() => LessonPersistence,
+    lesson => lesson.teacher,
+    { nullable: true })
+  lesson: LessonPersistence;
+
+  @Column({ type: 'text', name: 'department_id' })
+  departmentId?: string;
+
+  @ManyToOne(
+    () => DepartmentPersistence,
+    department => department.teachers,
+    { nullable: true })
+  @JoinColumn({ name: 'department_id' })
+  department: DepartmentPersistence | any;
+
+  @ManyToMany(
+    () => ClassPersistence,
+    c => c.teachers,
+    {},
+  )
+  classes: ClassPersistence[] | any;
 }
