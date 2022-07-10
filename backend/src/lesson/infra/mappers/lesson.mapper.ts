@@ -7,6 +7,7 @@ import { LocalMappers } from '../../../local/infra/mappers/local.mappers';
 import { TeacherMappers } from '../../../teacher/infra/mappers/teacher.mappers';
 import { LessonDto } from '../../application/dtos/lesson.dto';
 import { LessonDetailsDto } from '../../application/dtos/lesson.details.dto';
+import { SemesterMapper } from '../../../semester/infra/mappers/semester.mapper';
 
 export class LessonMappers {
   public static PersistToDomain(persist: LessonPersistence): Lesson {
@@ -21,6 +22,12 @@ export class LessonMappers {
           teacher:
             persist.teacher ? TeacherMappers.PersistToDomain(persist.teacher) : null,
           teacherId: { id: persist.teacherId },
+          semesterIds: persist.semesters.map(s => {
+            return {
+              id: s.id,
+            };
+          }),
+          semesters: persist.semesters ? persist.semesters.map(s => SemesterMapper.PersistToDomain(s)) : [],
         },
         persist.id)
     ;
@@ -45,6 +52,8 @@ export class LessonMappers {
       major: domain.majorId,
       local: domain.localId,
       teacher: domain.teacherId,
+      semesters: domain.semesterIds,
+      year: domain.year,
     };
   }
 
@@ -55,12 +64,13 @@ export class LessonMappers {
       fullName: domain.fullName,
       description: domain.description,
       priority: domain.priority,
-      teacherId: domain.teacherId.id,
-      localId: domain.localId.id,
-      majorId: domain.majorId.id,
+      teacherId: domain.teacherId,
+      localId: domain.localId,
+      majorId: domain.majorId,
       createdAt: domain.createdAt,
       updatedAt: domain.updatedAt,
       duration: domain.duration,
+      year: domain.year,
     };
   }
 
@@ -79,8 +89,9 @@ export class LessonMappers {
     return {
       ...base,
       teacher: domain.teacher ? TeacherMappers.DomainToDetails(domain.teacher) : null,
-      major: domain.major ? MajorMappers.DomainToDto(domain.major) : null,
-      local: domain.local ? LocalMappers.DomainToDto(domain.local) : null,
+      major: domain.major ? MajorMappers.DomainToDetails(domain.major) : null,
+      local: domain.local ? LocalMappers.DomainToDetails(domain.local) : null,
+      semesters: domain.semesters ? domain.semesters.map(s => SemesterMapper.DomainToDto(s)) : [],
     };
   }
 }

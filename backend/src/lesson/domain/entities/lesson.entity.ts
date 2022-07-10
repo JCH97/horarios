@@ -6,15 +6,19 @@ import { UniqueEntityID } from '../../../shared/domain/UniqueEntityID';
 import { Teacher } from '../../../teacher/domain/entities/teacher.entity';
 import { Major } from '../../../major/domain/entities/major.entity';
 import { Local } from '../../../local/domain/entities/local.entity';
+import { Semester } from '../../../semester/domain/entities/semester.entity';
 
 type LessonProps = DomainBaseProps & DomainTimestamp & {
   duration: number;
+  year: number;
   teacherId?: { id: string };
   teacher?: Teacher;
   majorId?: { id: string };
   major?: Major;
   localId?: { id: string };
   local?: Local;
+  semesterIds?: { id: string }[];
+  semesters?: Semester[];
 };
 
 type newLessonProps = Omit<LessonProps,
@@ -24,6 +28,10 @@ export class Lesson extends DomainEntity<LessonProps> {
 
   get duration(): number {
     return this.props.duration;
+  }
+
+  get year(): number {
+    return this.props.year;
   }
 
   get teacherId(): { id: string } {
@@ -48,6 +56,14 @@ export class Lesson extends DomainEntity<LessonProps> {
 
   get local(): Local {
     return this.props.local;
+  }
+
+  get semesterIds(): { id: string }[] {
+    return this.props.semesterIds;
+  }
+
+  get semesters(): Semester[] {
+    return this.props.semesters;
   }
 
   get shortName(): string {
@@ -100,6 +116,10 @@ export class Lesson extends DomainEntity<LessonProps> {
     this.props.teacherId = props.teacherId ?? this.props.teacherId;
     this.props.majorId = props.majorId ?? this.props.majorId;
     this.props.localId = props.localId ?? this.props.localId;
+    this.props.semesterIds =
+      props.semesterIds && props.semesterIds.length > 0
+        ? props.semesterIds
+        : this.props.semesterIds;
 
     this.props.updatedAt = new Date();
   }
