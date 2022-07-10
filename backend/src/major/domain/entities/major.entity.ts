@@ -3,10 +3,12 @@ import { DomainEntity } from '../../../shared/domain/entity.abstract';
 import { DomainTimestamp } from '../../../shared/domain/domain.timestamp';
 import { Result } from '../../../shared/core/Result';
 import { UniqueEntityID } from '../../../shared/domain/UniqueEntityID';
+import { Faculty } from '../../../faculty/domain/entities/faculty.entity';
 
 type MajorProps = DomainBaseProps & DomainTimestamp & {
   facultyId: string
   duration: number
+  faculty?: Faculty;
 }
 
 type newMajorProps = Omit<MajorProps,
@@ -44,6 +46,10 @@ export class Major extends DomainEntity<MajorProps> {
 
   get facultyId(): string {
     return this.props.facultyId;
+  }
+
+  get faculty(): Faculty {
+    return this.props.faculty;
   }
 
   public static New(props: newMajorProps): Result<Major> {

@@ -1,7 +1,7 @@
 import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response } from '@nestjs/common';
 import {
-  CreateMajorUseCase,
-  FindByIdMajorUseCase,
+  CreateMajorUseCase, FindAllMajorUseCase,
+  FindByIdMajorUseCase, FindDetailsMajorUseCase,
   PaginatedMajorUseCase,
   RemoveMajorUseCase,
   UpdateMajorUseCase,
@@ -12,6 +12,10 @@ import { MajorPaginatedDto } from '../../application/dtos/major.paginated.dto';
 import { MajorUpdateDto } from '../../application/dtos/major.update.dto';
 import { MajorCreateDto } from '../../application/dtos/major.create.dto';
 import { MajorMappers } from '../../infra/mappers/major.mappers';
+import { FacultyFindAllDto } from '../../../faculty/application/dtos/faculty.find-all.dto';
+import { FacultyMappers } from '../../../faculty/infra/mappers/faculty.mappers';
+import { Teacher } from '../../../teacher/domain/entities/teacher.entity';
+import { TeacherMappers } from '../../../teacher/infra/mappers/teacher.mappers';
 
 @Controller('major')
 export class MajorController {
@@ -23,7 +27,9 @@ export class MajorController {
     private readonly createMajorUseCase: CreateMajorUseCase,
     private readonly updateMajorUseCase: UpdateMajorUseCase,
     private readonly removeMajorUseCase: RemoveMajorUseCase,
-    private readonly paginatedMajorUseCase: PaginatedMajorUseCase) {
+    private readonly paginatedMajorUseCase: PaginatedMajorUseCase,
+    private readonly findAllMajor: FindAllMajorUseCase,
+    private readonly findDetailsUseCase: FindDetailsMajorUseCase) {
     this._logger = new Logger('MajorController');
   }
 
@@ -42,6 +48,22 @@ export class MajorController {
 
     const pag = await this.paginatedMajorUseCase.execute(body);
     return ProcessResponse.setResponse(res, pag, MajorMappers.PaginatedToDto);
+  }
+
+  @Post('all')
+  async getAll(@Body() body: FacultyFindAllDto, @Response() res) {
+    this._logger.log('Get All');
+
+    const ans = await this.findAllMajor.execute(body);
+    return ProcessResponse.setResponse(res, ans, MajorMappers.AllToDto);
+  }
+
+  @Get('details/:id')
+  async findDetails(@Param() params, @Response() res) {
+    this._logger.log('Find One Details');
+
+    const major = await this.findDetailsUseCase.execute({ id: params.id });
+    return ProcessResponse.setResponse<Major>(res, major, MajorMappers.DomainToDetails);
   }
 
   // @UseGuards(JwtAuthGuard)
