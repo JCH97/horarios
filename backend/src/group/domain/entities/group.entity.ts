@@ -9,7 +9,7 @@ import { AppError } from '../../../shared/core/errors/AppError';
 
 type GroupProps = DomainBaseProps & DomainTimestamp & {
   majorId?: { id: string };
-  major?: Major;
+  major?: Major | any;
   year: number;
 };
 

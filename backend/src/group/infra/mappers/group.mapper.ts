@@ -45,7 +45,7 @@ export class GroupMappers {
       priority: domain.priority,
       createdAt: domain.createdAt,
       updatedAt: domain.updatedAt,
-      majorId: domain.majorId.id,
+      majorId: domain.majorId,
       year: domain.year,
     };
   }
@@ -64,7 +64,7 @@ export class GroupMappers {
 
     return {
       ...base,
-      major: domain.major ? MajorMappers.DomainToDto(domain.major) : null,
+      major: domain.major ? MajorMappers.DomainToDetails(domain.major) : null,
     };
   }
 }

@@ -17,7 +17,7 @@ export class GroupRepository extends BaseRepository<Group, GroupPersistence> imp
     const group = await this
       ._entityRepository
       .findOne(id, {
-        relations: ['faculties', 'faculties.university'],
+        relations: ['major', 'major.faculty', 'major.faculty.university'],
       });
 
     return GroupMappers.PersistToDomain(group);
