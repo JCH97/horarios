@@ -88,53 +88,59 @@
 
                 <div style='margin-left: 5px; margin-top: 10px' class='form-group dropdown mb-0'>
                   <button
+                    :style='[selectedTeacher.id ? {"color": "green"}: {} ]'
                     class='btn btn-light dropdown-toggle'
                     type='button' id='teacher_drop_down'
                     data-toggle='dropdown'
                     aria-haspopup='true' aria-expanded='true'>
-                    {{ selectedShortNameTeacher != '' ? selectedShortNameTeacher : 'Elegir profesor' }}
+                    {{ !selectedTeacher.shortName ? 'Elegir Profesor' : selectedTeacher.shortName }}
                   </button>
                   <div class='dropdown-menu'>
                     <a style='cursor:pointer;' v-for='u in this.teachers' :key='u.id' class='dropdown-item'
-                       @click='selectedShortNameTeacher = u.shortName'>{{ u.fullName }}</a>
+                       @click='selectedTeacher = u'>{{ u.fullName }}</a>
                   </div>
                 </div>
 
 
-                <div style='margin-left: 5px; margin-top: 10px' class='form-group dropdown mb-0'>
-                  <button
-                    class='btn btn-light dropdown-toggle'
-                    type='button' id='teacher_drop_down'
-                    data-toggle='dropdown'
-                    aria-haspopup='true' aria-expanded='true'>
-                    {{ selectedShortNameLocal != '' ? selectedShortNameLocal : 'Elegir local' }}
-                  </button>
-                  <div class='dropdown-menu'>
-                    <a style='cursor:pointer;' v-for='u in this.locals' :key='u.id' class='dropdown-item'
-                       @click.prevent='selectedShortNameLocal = u.shortName'>{{ u.fullName }}</a>
-                  </div>
-                </div>
+                <!--                <div style='margin-left: 5px; margin-top: 10px' class='form-group dropdown mb-0'>-->
+                <!--                  <button-->
+                <!--                    class='btn btn-light dropdown-toggle'-->
+                <!--                    type='button' id='teacher_drop_down'-->
+                <!--                    data-toggle='dropdown'-->
+                <!--                    aria-haspopup='true' aria-expanded='true'>-->
+                <!--                    {{ selectedShortNameLocal != '' ? selectedShortNameLocal : 'Elegir local' }}-->
+                <!--                  </button>-->
+                <!--                  <div class='dropdown-menu'>-->
+                <!--                    <a style='cursor:pointer;' v-for='u in this.locals' :key='u.id' class='dropdown-item'-->
+                <!--                       @click.prevent='selectedShortNameLocal = u.shortName'>{{ u.fullName }}</a>-->
+                <!--                  </div>-->
+                <!--                </div>-->
 
 
                 <div style='margin-left: 5px; margin-top: 10px' class='form-group dropdown mb-0'>
-                  <button :style='[selectedIdTeacher != "" ? {"color": "green"} : {"color": "red"}]'
+                  <button :style='[selectedSemester.id ? {"color": "green"} : {}]'
                           class='btn btn-light dropdown-toggle'
                           type='button' id='teacher_drop_down'
                           data-toggle='dropdown'
                           aria-haspopup='true' aria-expanded='true'>
-                    Elegir Semestre
+                    {{ !selectedSemester.shortName ? 'Elegir Semestre' : selectedSemester.shortName }}
                   </button>
-
-                  <div class='dropdown-menu animated--fade-in ' aria-labelledby='dropdownMenuButton'
-                       x-placement='bottom-start'
-                       style='position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 38px, 0px);'>
-                    <div class='input-group m-2 ' v-for='it in semesters' :key='it.id'>
-                      <div class='input-group-text bg-white'>
-                        <input type='checkbox' aria-label='Checkbox for following text input' v-model='it.isMarked'>
-                        <span class='ml-2' id='basi7-addon3'>{{ it.shortName }}</span>
-                      </div>
-                    </div>
+                  <div class='dropdown-menu'>
+                    <a style='cursor:pointer;' v-for='u in this.semesters' :key='u.id' class='dropdown-item'
+                       @click='selectedSemester = u'>{{ u.fullName }}</a>
                   </div>
+
+                  <!--                  Elegir multiple-->
+                  <!--                  <div class='dropdown-menu animated&#45;&#45;fade-in ' aria-labelledby='dropdownMenuButton'-->
+                  <!--                       x-placement='bottom-start'-->
+                  <!--                       style='position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 38px, 0px);'>-->
+                  <!--                    <div class='input-group m-2 ' v-for='it in semesters' :key='it.id'>-->
+                  <!--                      <div class='input-group-text bg-white'>-->
+                  <!--                        <input type='checkbox' aria-label='Checkbox for following text input' v-model='it.'>-->
+                  <!--                        <span class='ml-2' id='basi7-addon3'>{{ it.shortName }}</span>-->
+                  <!--                      </div>-->
+                  <!--                    </div>-->
+                  <!--                  </div>-->
 
                 </div>
 
@@ -179,9 +185,9 @@ export default {
         semesterId: {},
         localId: {},
       },
-      selectedShortNameTeacher: '',
-      selectedShortNameLocal: '',
-      selectedShortNameSemester: '',
+      selectedTeacher: {},
+      selectedLocal: {},
+      selectedSemester: {},
     };
   },
   methods: {
@@ -204,7 +210,14 @@ export default {
           }
         });
 
-      // this.$store.state.teachers.getAll(token, {});
+      this.$store.state.teachers.getAll(token, {})
+        .then(result => {
+          if (result === true) {
+            this.teachers = this.$store.state.teachers.data;
+          }
+        });
+
+      // this.$store.state.se
 
 
     },

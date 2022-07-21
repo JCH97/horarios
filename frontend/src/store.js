@@ -35,6 +35,8 @@ import DepartmentController from './controllers/Department/department';
 import DepartmentsController from './controllers/Department/departments';
 import LessonController from './controllers/Lessons/lesson';
 import LessonsController from './controllers/Lessons/lessons';
+import SemesterController from './controllers/Semester/semester';
+import SemestersControllers from './controllers/Semester/semesters';
 
 Vue.use(Vuex);
 
@@ -75,6 +77,8 @@ const store = new Vuex.Store({
     departments: DepartmentsController,
     lesson: LessonController,
     lessons: LessonsController,
+    semester: SemesterController,
+    semesters: SemestersControllers,
   }, mutations: {}, actions: {},
 });
 

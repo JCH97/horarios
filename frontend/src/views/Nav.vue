@@ -103,6 +103,13 @@
               <i class='fas fa-lock px-4'></i>
             </router-link>
           </li>
+          <li class='nav-item form-inline'>
+            <router-link :to="{name: 'semestersPage'}" class='nav-link'>
+              <i class='fas fa-fw fa-people-carry'></i>
+              <span>Semestres</span>
+              <i class='fas fa-lock px-4'></i>
+            </router-link>
+          </li>
         </div>
 
         <!-- Divider -->

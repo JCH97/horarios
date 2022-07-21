@@ -31,4 +31,6 @@ export default {
   classes: baseUrl + 'class',
   departments: baseUrl + 'department',
   departmentGetAll: baseUrl + 'department/all',
+  semesters: baseUrl + 'semester',
+  semestersGetAll: baseUrl + 'semester/all',
 };
