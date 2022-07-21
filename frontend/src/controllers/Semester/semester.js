@@ -14,11 +14,13 @@ export default {
     }
   }, removeMinData() {
     localStorage.removeItem(data_key);
-  }, create(token, body) {
+  }, edit(token, semester) {
     Petitions.clearHeaders();
     Petitions.set_JSONHeaders(null, null, token);
 
-    return Petitions.post(`${baseEndpoint}/create`, body)
+    return Petitions.put(baseEndpoint, {
+      semesterId: semester.id, ...semester,
+    })
       .then(response => response.json(), response => console.log('Error getting the response.'))
       .then(json => {
         if (json !== null && !json.hasOwnProperty('error')) {
@@ -28,55 +30,13 @@ export default {
         }
         return false;
       });
-
-  }, delete(token, id) {
+  }, getData(token, id) {
     Petitions.clearHeaders();
     Petitions.set_JSONHeaders(null, null, token);
 
-    return Petitions.delete(baseEndpoint, { id: id })
+    return Petitions.get(baseEndpoint + '/' + id)
       .then(response => response.json(), response => console.log('Error getting the response.'))
       .then(json => {
-        if (json !== null && !json.hasOwnProperty('error')) {
-          this.data = json;
-          this.saveMinData();
-          return true;
-        }
-        return false;
-      })
-      .catch(err => console.log(err));
-  }, getAll(token, filter = {}) {
-
-    Petitions.clearHeaders();
-    Petitions.set_JSONHeaders(null, null, token);
-
-    return Petitions.post(Endpoints.semestersGetAll, {
-      'filter': filter,
-    })
-      .then(response => response.json())
-      .then(json => {
-        json = json.items;
-
-        if (json !== null && !json.hasOwnProperty('error')) {
-          this.data = json;
-          this.saveMinData();
-          return true;
-        }
-        return false;
-      });
-
-  }, getData(token, filter = {}, pageNum = 1, pageLimit = 10) {
-    Petitions.clearHeaders();
-    Petitions.set_JSONHeaders(null, null, token);
-    return Petitions.post(baseEndpoint, {
-      pageParams: {
-        'pageNum': pageNum, 'pageLimit': pageLimit,
-      }, 'filter': filter,
-    })
-      .then(response => response.json(), response => console.log('Error getting the response.'))
-      .then(json => {
-
-        json = json.items;
-
         if (json !== null && !json.hasOwnProperty('error')) {
           this.data = json;
           this.saveMinData();

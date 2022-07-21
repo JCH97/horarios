@@ -116,6 +116,11 @@
                        v-model='semester.priority' />
               </div>
               <div class='form-group'>
+                <label for='input-description' class='col-form-label'>Descripcion:</label>
+                <input type='number' class='form-control' id='input-description'
+                       v-model='semester.description' />
+              </div>
+              <div class='form-group'>
                 <label for='input-start' class='col-form-label'>Inicio:</label>
                 <input type='date' class='form-control' id='input-start' v-model='semester.start' />
               </div>
