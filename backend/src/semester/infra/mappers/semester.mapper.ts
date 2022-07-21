@@ -2,6 +2,10 @@ import { SemesterPersistence } from '../entities/semester.persistence';
 import { Semester } from '../../domain/entities/semester.entity';
 import { SemesterDto } from '../../application/dtos/semester.dto';
 import { PaginatedFindResult } from '../../../shared/core/PaginatedFindResult';
+import { Faculty } from '../../../faculty/domain/entities/faculty.entity';
+import { FacultyDetailsDto } from '../../../faculty/application/dtos/facultyDetailsDto';
+import { UniversityMapper } from '../../../university/infra/mappers/university.mapper';
+import { SemesterDetailsDto } from '../../application/dtos/semester.details.dto';
 
 export class SemesterMapper {
   public static PersistToDomain(persist: SemesterPersistence): Semester {
@@ -25,6 +29,9 @@ export class SemesterMapper {
       priority: domain.priority,
       createdAt: domain.createdAt,
       updatedAt: domain.updatedAt,
+      duration: domain.duration,
+      start: domain.start,
+      end: domain.end,
     };
   }
 
@@ -51,4 +58,13 @@ export class SemesterMapper {
       currentPage: pag.currentPage,
     };
   }
+
+  public static DomainToDetails(domain: Semester): SemesterDetailsDto {
+    let base = SemesterMapper.DomainToDto(domain);
+    return {
+      ...base,
+    };
+  }
+
+
 }

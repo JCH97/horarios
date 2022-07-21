@@ -2,7 +2,7 @@ import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response } fro
 import {
   CreateSemesterUseCase,
   FindAllSemesterUseCase,
-  FindByIdSemesterUseCase,
+  FindByIdSemesterUseCase, FindDetailsSemesterUseCase,
   RemoveSemesterUseCase,
   UpdateSemesterUseCase,
 } from '../../application/useCases';
@@ -14,6 +14,7 @@ import { SemesterUpdateDto } from '../../application/dtos/semester.update.dto';
 import { PaginatedSemesterUseCase } from '../../application/useCases/semester.paginated.use-case';
 import { SemesterPaginatedDto } from '../../application/dtos/semester.paginated.dto';
 import { SemesterFindAllDto } from '../../application/dtos/semester.find-all.dto';
+import { FacultyMappers } from '../../../faculty/infra/mappers/faculty.mappers';
 
 @Controller('semester')
 export class SemesterController {
@@ -26,7 +27,8 @@ export class SemesterController {
     private readonly updateSemester: UpdateSemesterUseCase,
     private readonly removeSemester: RemoveSemesterUseCase,
     private readonly paginatedSemester: PaginatedSemesterUseCase,
-    private readonly findAllSemester: FindAllSemesterUseCase) {
+    private readonly findAllSemester: FindAllSemesterUseCase,
+    private readonly findDetailsSemester: FindDetailsSemesterUseCase) {
     this._logger = new Logger('SemesterController');
   }
 
@@ -36,6 +38,15 @@ export class SemesterController {
 
     const semester = await this.findOneUseCase.execute({ id: params.id });
     return ProcessResponse.setResponse<Semester>(res, semester, SemesterMapper.DomainToDto);
+
+  }
+
+  @Get('details/:id')
+  async findDetails(@Param() params, @Response() res) {
+    this._logger.log('Find details');
+
+    const semester = await this.findDetailsSemester.execute({ id: params.id });
+    return ProcessResponse.setResponse(res, semester, SemesterMapper.DomainToDetails);
 
   }
 
