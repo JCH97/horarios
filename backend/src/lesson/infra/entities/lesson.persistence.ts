@@ -31,7 +31,7 @@ export class LessonPersistence extends PersistentEntity {
   @Column({ type: 'text', name: 'teacher_id' })
   teacherId: string;
 
-  @Column({ type: 'text', name: 'local_id' })
+  @Column({ type: 'text', name: 'local_id', nullable: true })
   localId: string;
 
   @Column({ type: 'text', name: 'major_id' })
@@ -47,10 +47,9 @@ export class LessonPersistence extends PersistentEntity {
   @OneToOne(
     () => LocalPersistence,
     local => local.lesson,
-    {})
+    { nullable: true })
   @JoinColumn({ name: 'local_id' })
   local: LocalPersistence | any;
-
 
   @OneToOne(
     () => MajorPersistence,
