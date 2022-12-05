@@ -1,7 +1,10 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response, UseGuards } from '@nestjs/common';
 import {
   CreateTeachYearUseCase,
-  FindByIdTeachYearUseCase, FindDetailsTeachYearUseCase, PaginatedTeachYearUseCase, RemoveTeachYearUseCase,
+  FindByIdTeachYearUseCase,
+  FindDetailsTeachYearUseCase,
+  PaginatedTeachYearUseCase,
+  RemoveTeachYearUseCase,
   UpdateTeachYearUseCase,
 } from '../../../teachYear/application/useCases';
 import { ProcessResponse } from '../../../shared/core/utils/processResponse';
@@ -10,6 +13,9 @@ import { TeachYearPaginatedDto } from '../../../teachYear/application/dtos/teach
 import { TeachYearCreateDto } from '../../../teachYear/application/dtos/teachYear.create.dto';
 import { TeachYearUpdateDto } from '../../../teachYear/application/dtos/teachYear.update.dto';
 import { TeachYearMapper } from '../../infra/mappers/teachYear.mapper';
+import { JwtAuthGuard } from '../../../auth/application/guards/jwtAuthGuard';
+import { PermissionsDecorator } from '../../../auth/application/decorator/permission.decorator';
+import { UserPermissions } from '../../../user/domain/enums/user.permissions';
 
 @Controller('teachYear')
 export class TeachYearController {
@@ -52,7 +58,8 @@ export class TeachYearController {
     return ProcessResponse.setResponse(res, pag, TeachYearMapper.PaginatedToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_TEACHER_YEAR)
   @Post('create')
   async create(@Body() body: TeachYearCreateDto, @Response() res) {
 
@@ -62,7 +69,8 @@ export class TeachYearController {
     return ProcessResponse.setResponse<TeachYear>(res, teachYear, TeachYearMapper.DomainToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_TEACHER_YEAR)
   @Put()
   async update(@Body() body: TeachYearUpdateDto, @Response() res) {
     this._logger.log('Update');
@@ -71,7 +79,8 @@ export class TeachYearController {
     return ProcessResponse.setResponse<TeachYear>(res, teachYear, TeachYearMapper.DomainToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_TEACHER_YEAR)
   @Delete()
   async delete(@Body() body: { id: string }, @Response() res) {
     this._logger.log('Delete');

@@ -4,6 +4,7 @@ import { LocalDto } from '../../application/dtos/local.dto';
 import { PaginatedFindResult } from '../../../shared/core/PaginatedFindResult';
 import { LocalDetailsDto } from '../../application/dtos/local.details.dto';
 import { FacultyMappers } from '../../../faculty/infra/mappers/faculty.mappers';
+import { FindAllResult } from '../../../shared/core/FindAllResult';
 
 export class LocalMappers {
   public static PersistToDomain(persist: LocalPersistence): Local {
@@ -29,6 +30,14 @@ export class LocalMappers {
       createdAt: domain.createdAt,
       updatedAt: domain.updatedAt,
       facultyId: domain.facultyId,
+      capacity: domain.capacity,
+    };
+  }
+
+
+  public static AllToDto(all: FindAllResult<Local>): FindAllResult<LocalDto> {
+    return {
+      items: all.items.map(LocalMappers.DomainToDto),
     };
   }
 
@@ -41,6 +50,7 @@ export class LocalMappers {
       priority: domain.priority,
       createdAt: domain.createdAt,
       updatedAt: domain.updatedAt,
+      capacity: domain.capacity,
     };
   }
 

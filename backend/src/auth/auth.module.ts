@@ -6,7 +6,7 @@ import { UserModule } from 'src/user/user.module';
 import { LocalStrategy } from './application/strategies/localStrategy';
 import { JwtStrategy } from './application/strategies/jwtStrategy';
 import { ValidateUserUseCase } from './application/useCase/auth.validate.use-case';
-import { AuthController } from './controller/authController';
+import { AuthController } from './presentation/controllers/auth.controller';
 import { AppConfigModule } from '../shared/modules/config/app-config.module';
 import { AppConfigService } from '../shared/modules/config/service/app-config-service';
 import { AuthUseCases } from './application/useCase';

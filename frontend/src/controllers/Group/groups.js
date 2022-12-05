@@ -17,7 +17,7 @@ export default {
     Petitions.clearHeaders();
     Petitions.set_JSONHeaders(token, '');
 
-    console.log('get groups')
+    console.log('get groups');
 
     return Petitions.post(Endpoints.groups, {
       pageParams: {
@@ -33,6 +33,23 @@ export default {
           return true;
         }
         return false;
+      });
+  }, getAll(token, filter = {}) {
+    Petitions.clearHeaders();
+    Petitions.set_JSONHeaders(null, null, token);
+
+    return Petitions.post(Endpoints.groupsGetAll, {
+      'filter': filter,
+    })
+      .then(response => response.json())
+      .then(json => {
+        json = json.items;
+
+        this.data = json;
+        this.saveMinData();
+
+        return json !== null && !json.hasOwnProperty('error');
+
       });
   }, create(token, body) {
     Petitions.clearHeaders();

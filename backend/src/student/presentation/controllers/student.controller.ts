@@ -1,7 +1,10 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response, UseGuards } from '@nestjs/common';
 import {
   CreateStudentUseCase,
-  FindByIdStudentUseCase, FindDetailsStudentUseCase, PaginatedStudentUseCase, RemoveStudentUseCase,
+  FindByIdStudentUseCase,
+  FindDetailsStudentUseCase,
+  PaginatedStudentUseCase,
+  RemoveStudentUseCase,
   UpdateStudentUseCase,
 } from '../../../student/application/useCases';
 import { ProcessResponse } from '../../../shared/core/utils/processResponse';
@@ -10,6 +13,9 @@ import { StudentMappers } from '../../../student/infra/mappers/student.mapper';
 import { StudentPaginatedDto } from '../../../student/application/dtos/student.paginated.dto';
 import { StudentCreateDto } from '../../../student/application/dtos/student.create.dto';
 import { StudentUpdateDto } from '../../../student/application/dtos/student.update.dto';
+import { JwtAuthGuard } from '../../../auth/application/guards/jwtAuthGuard';
+import { UserPermissions } from '../../../user/domain/enums/user.permissions';
+import { PermissionsDecorator } from '../../../auth/application/decorator/permission.decorator';
 
 @Controller('student')
 export class StudentController {
@@ -52,7 +58,8 @@ export class StudentController {
     return ProcessResponse.setResponse(res, pag, StudentMappers.PaginatedToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_STUDENT)
   @Post('create')
   async create(@Body() body: StudentCreateDto, @Response() res) {
 
@@ -62,7 +69,8 @@ export class StudentController {
     return ProcessResponse.setResponse<Student>(res, student, StudentMappers.DomainToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_STUDENT)
   @Put()
   async update(@Body() body: StudentUpdateDto, @Response() res) {
     this._logger.log('Update');
@@ -71,7 +79,8 @@ export class StudentController {
     return ProcessResponse.setResponse<Student>(res, student, StudentMappers.DomainToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_STUDENT)
   @Delete()
   async delete(@Body() body: { id: string }, @Response() res) {
     this._logger.log('Delete');

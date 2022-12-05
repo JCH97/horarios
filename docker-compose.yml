@@ -1,0 +1,70 @@
+version: '3.7'
+
+services:
+  api:
+    container_name: horarios_api
+    image: horarios_api:1.0.0
+    build:
+      context: ./backend
+      target: production
+      dockerfile: ./Dockerfile
+    command: npm run start
+    env_file:
+      - backend/.env
+    networks:
+      - timetable
+    ports:
+      - 3001:3001
+    depends_on:
+      - db
+    volumes:
+      - ./backend:/usr/src/api
+      - /usr/src/api/node_modules
+    restart: unless-stopped
+
+  ui:
+    container_name: horarios_ui
+    image: horarios_ui:1.0.0
+    build:
+      context: ./frontend
+      dockerfile: ./Dockerfile
+    #    command: npm run start
+    ports:
+      - 80:80
+    networks:
+      - timetable
+    volumes:
+      - ./frontend:/usr/src/ui
+      - /usr/src/app/node_modules
+    restart: unless-stopped
+
+  db:
+    container_name: horarios_db
+    image: postgis/postgis:13-3.2
+    environment:
+      PGDATA: /var/lib/postgresql/data/pgdata
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pass2021
+    networks:
+      - timetable
+    ports:
+      - 5432:5432
+    restart: unless-stopped
+    volumes:
+      - horarios_postgres:/var/lib/postgresql/data
+      - ./backend/seed:/docker-entrypoint-initdb.d/
+
+  adminer:
+    container_name: horarios_adminer_1
+    image: docker.uclv.cu/adminer:latest
+    restart: always
+    ports:
+      - 8080:8080
+
+networks:
+  timetable:
+
+volumes:
+  horarios_postgres:
+    driver: local
+

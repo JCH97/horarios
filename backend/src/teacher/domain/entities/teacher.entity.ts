@@ -5,6 +5,7 @@ import { Result } from '../../../shared/core/Result';
 import { UniqueEntityID } from '../../../shared/domain/UniqueEntityID';
 import { Faculty } from '../../../faculty/domain/entities/faculty.entity';
 import { Department } from '../../../department/domain/entities/department.entity';
+import { User } from '../../../user/domain/entities/user.entity';
 
 type TeacherProps = DomainBaseProps & DomainTimestamp & {
   email: string;
@@ -12,6 +13,8 @@ type TeacherProps = DomainBaseProps & DomainTimestamp & {
   faculties?: Faculty[];
   departmentId?: { id: string }
   department?: Department;
+  userId?: { id: string }
+  user?: User;
 };
 
 type newTeacherProps = Omit<TeacherProps, 'id' | 'createdAt' | 'updatedAt'>;
@@ -20,6 +23,14 @@ export class Teacher extends DomainEntity<TeacherProps> {
 
   get email(): string {
     return this.props.email;
+  }
+
+  get userId(): { id: string } {
+    return this.props.userId;
+  }
+
+  get user(): User {
+    return this.props.user;
   }
 
   get shortName(): string {
@@ -55,7 +66,7 @@ export class Teacher extends DomainEntity<TeacherProps> {
   }
 
   get priority(): number {
-    return this.props.priority;
+    return this.props.priority ?? 1;
   }
 
   get createdAt(): Date {
@@ -71,6 +82,10 @@ export class Teacher extends DomainEntity<TeacherProps> {
     if (!facs) return;
 
     this.props.facultyIds = facs;
+  }
+
+  public SetUser(userId: { id: string }) {
+    this.props.userId = userId;
   }
 
   public static New(props: newTeacherProps): Result<Teacher> {

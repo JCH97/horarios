@@ -2,15 +2,18 @@ import { User } from 'src/user/domain/entities/user.entity';
 import { UserPersistence } from '../entities/user.persistence';
 import { UserDto } from '../../application/dtos/user.dto';
 import { PaginatedFindResult } from '../../../shared/core/PaginatedFindResult';
+import { FindAllResult } from '../../../shared/core/FindAllResult';
 
 
 export class UserMapper {
   public static PersistToDomain(persist: UserPersistence): User {
+
+    if (!persist) return null;
+
     const domain = User.Create({
       ...persist,
-    }, persist.id);
+    }, persist?.id);
 
-    // TODO: handle this
     if (domain.isFailure)
       throw new Error(domain.unwrapError().message);
 
@@ -25,7 +28,7 @@ export class UserMapper {
       createdAt: domain.createdAt,
       updatedAt: domain.updatedAt,
       email: domain.email,
-      roles: domain.roles,
+      permissions: domain.permissions,
       password: domain.password,
       status: domain.status,
     };
@@ -36,7 +39,7 @@ export class UserMapper {
       id: domain._id.toString(),
       createdAt: domain.createdAt,
       updatedAt: domain.updatedAt,
-      roles: domain.roles,
+      permissions: domain.permissions,
       status: domain.status,
       email: domain.email,
       username: domain.username,
@@ -49,6 +52,12 @@ export class UserMapper {
       limit: pag.limit,
       totalPages: pag.totalPages,
       currentPage: pag.currentPage,
+    };
+  }
+
+  public static AllToDto(all: FindAllResult<User>): FindAllResult<UserDto> {
+    return {
+      items: all.items.map(UserMapper.DomainToDto),
     };
   }
 

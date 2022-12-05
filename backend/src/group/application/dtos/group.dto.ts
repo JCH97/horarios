@@ -6,4 +6,5 @@ import { MajorDetailsDto } from '../../../major/application/dtos/major.details.d
 export type GroupDto = BaseDto & PropsBaseDto & {
   year: number;
   majorId?: {id: string};
+  color: string;
 }

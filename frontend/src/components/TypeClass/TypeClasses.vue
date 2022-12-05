@@ -65,11 +65,17 @@
                 <div class='col-md-6'>
                   <div class='form-group'>
                     <label for='input-fullName' class='col-form-label'>Nombre completo:</label>
-                    <input type='text' class='form-control' id='input-fullName' v-model='newTypeClass.fullName'>
+                    <input type='text'
+                           :class="{'form-control': true, 'border-danger': errors & 1}"
+                           id='input-fullName'
+                           v-model='newTypeClass.fullName'>
                   </div>
                   <div class='form-group'>
-                    <label for='input-shortName' class='col-form-label'>Nombre:</label>
-                    <input type='text' class='form-control' id='input-shortName' v-model='newTypeClass.shortName'>
+                    <label for='input-shortName' class='col-form-label'>Nombre Reducido:</label>
+                    <input type='text'
+                           :class="{'form-control': true, 'border-danger': errors & (1 << 1)}"
+                           id='input-shortName'
+                           v-model='newTypeClass.shortName'>
                   </div>
                   <div class='form-group'>
                     <label for='input-priority' class='col-form-label'>Prioridad:</label>
@@ -81,21 +87,27 @@
                 <div class='col-md-6'>
                   <div class='form-group'>
                     <div class='form-group'>
-                      <label for='input-duration' class='col-form-label'>Duracion:</label>
-                      <input type='number' class='form-control' id='input-duration' v-model='newTypeClass.duration' />
+                      <label for='input-duration' class='col-form-label'>Duración:</label>
+                      <input type='number'
+                             :class="{'form-control': true, 'border-danger': errors & (1 << 2)}"
+                             id='input-duration'
+                             v-model='newTypeClass.duration' />
                     </div>
                     <div class='form-group'>
                       <label class='col-form-label'> Elegir tipo:</label>
-                      <button class='btn btn-secondary btn-lg dropdown-toggle' type='button' id='input-select-type'
-                              data-toggle='dropdown'
-                              aria-haspopup='true' aria-expanded='false'
-                              style='width: 220px; height: 40px;'
+                      <button
+                        :class="{'btn': true, 'btn-secondary': true, 'btn-lg': true, 'dropdown-toggle': true, 'border-danger': errors & (1 << 3)}"
+                        type='button'
+                        id='input-select-type'
+                        data-toggle='dropdown'
+                        aria-haspopup='true' aria-expanded='false'
+                        style='width: 220px; height: 40px;'
                       >
                         {{ this.btnSelectedTypeText }}
                       </button>
 
                       <div class='dropdown-menu'>
-                        <a v-for='u in this.types' :key='u' class='dropdown-item'
+                        <a style='cursor: pointer' v-for='u in this.types' :key='u' class='dropdown-item'
                            @click.prevent='chooseType(u)'>{{ u }}</a>
                       </div>
 
@@ -142,6 +154,7 @@ export default {
         type: '',
       },
       btnSelectedTypeText: '',
+      errors: 0,
     };
   },
   methods: {
@@ -179,7 +192,7 @@ export default {
 
       this.$store.state.typeClasses.delete(token, typeClassId).then(result => {
         if (result === true) {
-          this.typeClasses = this.typeClasses.filter(u => u.id != typeClassId);
+          this.typeClasses = this.typeClasses.filter(u => u.id !== typeClassId);
           this.typeClasses = this.typeClasses.slice().sort((a, b) => b.shortName - a.shortName);
         } else {
           this.$router.push({ name: 'notFoundPage' });
@@ -189,7 +202,36 @@ export default {
     addTypeClass() {
       $('#modalCreate').modal('show');
     },
+    checkErrors() {
+      this.errors |= (this.newTypeClass.fullName === '') ? 1 : this.errors;
+      this.errors |= (this.newTypeClass.shortName === '') ? (1 << 1) : this.errors;
+      this.errors |= (this.newTypeClass.duration === '') ? (1 << 2) : this.errors;
+      this.errors |= (this.newTypeClass.type === '') ? (1 << 3) : this.errors;
+
+      setTimeout(() => {
+        this.errors = 0;
+      }, 3000);
+
+      return this.errors > 0;
+    },
+
+    restore() {
+      this.btnSelectedTypeText = '';
+      this.newTypeClass = {
+        fullName: '',
+        shortName: '',
+        priority: '',
+        description: '',
+        duration: '',
+        type: '',
+      };
+    },
+
     saveTypeClass() {
+      if (this.checkErrors()) return;
+
+      $('#modalCreate').modal('hide');
+
       this.$store.state.profile.loadMinData();
       let token = this.$store.state.profile.data.token;
 
@@ -197,6 +239,9 @@ export default {
         if (result === true) {
           this.typeClasses.push(this.$store.state.typeClasses.data);
           this.typeClasses = this.typeClasses.slice().sort((a, b) => b.shortName - a.shortName);
+
+          this.restore();
+
         } else {
           this.$router.push({ name: 'notFoundPage' });
         }

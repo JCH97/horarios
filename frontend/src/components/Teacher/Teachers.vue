@@ -31,13 +31,19 @@
         <div class='card'>
           <div class='card-body p-0'>
             <div class='list-group'>
-              <button v-if="filterList(teachers, text, 'email').length === 0" type='button'
+              <button v-if="filterList(teachers, text, 'fullName').length === 0" type='button'
                       class='list-group-item list-group-item-action' disabled>No hay resultados para mostrar
               </button>
-              <router-link v-for="teacher in filterList(teachers, text, 'email')" :key='teacher.email'
+              <router-link v-for="teacher in filterList(teachers, text, 'fullName')" :key='teacher.email'
                            :to="{name: 'teacherPage', params: {teacherId: teacher.id}}"
                            class='list-group-item list-group-item-action'>{{ teacher.fullName }} ({{ teacher.email }})
                 <div class='form-inline justify-content-end'>
+                  <i v-if='!teacher.userId || teacher.userId === {} || teacher.userId.id === null' class='fas fa-link mx-3'
+                     data-toggle='tooltip'
+                     title='Enlazar con usuario'
+                     @click.prevent='linkUserModal(teacher.id)'></i>
+                  <i v-else class='fas fa-unlink mx-3' data-toggle='tooltip' title='Desenlazar usuario'
+                     @click.prevent='unlinkUser(teacher.id)'></i>
                   <i class='fas fa-trash' @click.prevent='removeTeacher(teacher.id)'></i>
                 </div>
               </router-link>
@@ -64,21 +70,31 @@
                 <div class='col-md-6'>
                   <div class='form-group'>
                     <label for='input-fullName' class='col-form-label'>Nombre completo:</label>
-                    <input type='text' class='form-control' id='input-fullName' v-model='newTeacher.fullName'>
+                    <input type='text'
+                           :class="{'form-control': true, 'border-danger': errors & 1}"
+                           id='input-fullName'
+                           v-model='newTeacher.fullName'>
                   </div>
                   <div class='form-group'>
-                    <label for='input-shortName' class='col-form-label'>Nombre:</label>
-                    <input type='text' class='form-control' id='input-shortName' v-model='newTeacher.shortName'>
-                  </div>
-                  <div class='form-group'>
-                    <label for='input-priority' class='col-form-label'>Prioridad:</label>
-                    <input type='number' class='form-control' id='input-priority' v-model='newTeacher.priority' />
+                    <label for='input-shortName' class='col-form-label'>Nombre Reducido:</label>
+                    <input type='text'
+                           :class="{'form-control': true, 'border-danger': errors & (1 << 1)}"
+                           id='input-shortName'
+                           v-model='newTeacher.shortName'>
                   </div>
                 </div>
                 <div class='col-md-6'>
                   <div class='form-group'>
-                    <label for='input-description' class='col-form-label'>Email:</label>
-                    <input class='form-control' id='input-description' v-model='newTeacher.email'>
+                    <div class='form-group'>
+                      <label for='input-priority' class='col-form-label'>Prioridad:</label>
+                      <input type='number' class='form-control' id='input-priority' v-model='newTeacher.priority' />
+                    </div>
+
+                    <label for='input-description' class='col-form-label'>Correo:</label>
+                    <input type='text'
+                           :class="{'form-control': true, 'border-danger': errors & (1 << 2)}"
+                           id='input-description'
+                           v-model='newTeacher.email'>
                   </div>
 
                   <!--                  <div class='form-group'>-->
@@ -126,7 +142,49 @@
           </div>
           <div class='modal-footer'>
             <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancelar</button>
-            <button type='button' class='btn btn-primary' data-dismiss='modal' @click='saveTeacher()'>
+            <button type='button' class='btn btn-primary' @click='saveTeacher()'>
+              Guardar
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!--    Link with user-->
+    <div class='modal fade' id='modalLinkUser' tabindex='-1' role='dialog' aria-labelledby='modalLinkUser'
+         aria-hidden='true' ref='modalLinkUser'>
+      <div class='modal-dialog' role='document'>
+        <div class='modal-content'>
+          <div class='modal-header'>
+            <h5 class='modal-title' id='exampleModalLabel'>Enlazar con usuario</h5>
+            <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
+              <span aria-hidden='true'>&times;</span>
+            </button>
+          </div>
+          <div class='modal-body'>
+            <form>
+              <div class='row px-3'>
+                <label class='col-form-label mx-3'> Elegir usuario:</label>
+                <br>
+                <button class='btn btn-secondary btn-lg dropdown-toggle' type='button'
+                        id='input-select-university'
+                        data-toggle='dropdown'
+                        aria-haspopup='true' aria-expanded='false'
+                        style='width: 220px; height: 40px;'
+                >
+                  {{ btnSelectedUserText }}
+                </button>
+
+                <div class='dropdown-menu'>
+                  <a style='cursor: pointer' v-for='u in this.users' :key='u.id' class='dropdown-item'
+                     @click='btnSelectedUserText = u.username'>{{ u.username }} / {{ u.email }}</a>
+                </div>
+              </div>
+            </form>
+          </div>
+          <div class='modal-footer'>
+            <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancelar</button>
+            <button type='button' class='btn btn-primary' @click='linkUser()'>
               Guardar
             </button>
           </div>
@@ -144,8 +202,10 @@ export default {
     return {
       btnSelectUniversityText: 'Elegir universidad',
       btnSelectFacultyText: 'Elegir facultad',
+      btnSelectedUserText: 'Elegir usuario',
       text: '',
       val: 1,
+      errors: 0,
       universities: [],
       faculties: [], // indica las facultades de la universidad elegida
       teachers: [],
@@ -159,6 +219,8 @@ export default {
         facultyIds: [],
         departmentId: {},
       },
+      users: [],
+      teacherIdSelectedForLink: '',
     };
   },
   methods: {
@@ -168,7 +230,7 @@ export default {
 
       const departmentId = this.$route.params.departmentId;
 
-      this.$store.state.teachers.getData(token, { departmentId })
+      this.$store.state.teachers.getAll(token, { departmentId })
         .then(result => {
           if (result === true) {
             this.teachers = this.$store.state.teachers.data;
@@ -188,34 +250,126 @@ export default {
           }
         });
     },
+
     filterList(list, box, prop) {
       let tmp = list.slice().sort(this.comparer(prop, this.val));
       return tmp.filter(elem => {
         return elem[prop].toString().toLowerCase().includes(box.toLowerCase());
       });
     },
+
     setVal() {
       this.val = 1;
     },
+
     unsetVal() {
       this.val = -1;
     },
+
     removeTeacher(teacherId) {
+
+      const pass = confirm('Esta seguro que desea eliminar el profesor ?');
+
+      if (!pass)
+        return;
+
       this.$store.state.profile.loadMinData();
       let token = this.$store.state.profile.data.token;
 
       this.$store.state.teachers.delete(token, teacherId).then(result => {
         if (result === true) {
+          this.teachers = this.teachers.filter(x => x.id !== teacherId);
           this.teachers = this.teachers.slice().sort((a, b) => b.shortName - a.shortName);
         } else {
           this.$router.push({ name: 'notFoundPage' });
         }
       });
     },
+
     addTeacher() {
       $('#modalCreate').modal('show');
     },
+
+    checkErrors() {
+      this.errors |= (this.newTeacher.fullName === '') ? 1 : this.errors;
+      this.errors |= (this.newTeacher.shortName === '') ? (1 << 1) : this.errors;
+      this.errors |= (this.newTeacher.email === '') ? (1 << 2) : this.errors;
+
+      setTimeout(() => {
+        this.errors = 0;
+      }, 3000);
+
+      return this.errors > 0;
+    },
+
+    linkUserModal(teacherId) {
+      this.$store.state.profile.loadMinData();
+      let token = this.$store.state.profile.data.token;
+
+      this.$store.state.users.getAll(token)
+        .then(result => {
+          if (result === true) {
+
+            let alreadyLinkedUsers = this.teachers
+              .filter(x => x.userId && x.userId.id)
+              .map(t => t.userId.id);
+
+            this.users = this.$store.state.users.data;
+
+            this.users = this.users
+              .filter(x => !alreadyLinkedUsers.includes(x.id));
+
+            this.teacherIdSelectedForLink = teacherId;
+            $('#modalLinkUser').modal('show');
+          }
+        });
+    },
+
+    linkUser() {
+      this.$store.state.profile.loadMinData();
+      let token = this.$store.state.profile.data.token;
+
+      const possibleUser = this.users.find(x => x.username === this.btnSelectedUserText);
+
+      this.$store.state.users.linkUser(token, {
+        userId: possibleUser.id,
+        teacherId: this.teacherIdSelectedForLink,
+      })
+        .then(result => {
+          if (result === true) {
+            $('#modalLinkUser').modal('hide');
+
+            let t = this.teachers.find(x => x.id === this.teacherIdSelectedForLink);
+            t.userId = { id: possibleUser.id };
+
+          }
+        });
+    },
+
+    unlinkUser(teacherId) {
+      const pass = confirm('Esta seguro que desea desenlazar el usuario ?');
+
+      if (!pass) return;
+
+      this.$store.state.profile.loadMinData();
+      let token = this.$store.state.profile.data.token;
+
+      this.$store.state.teachers.unlinkUser(token, {
+        teacherId: teacherId,
+      })
+        .then(result => {
+          if (result === true) {
+            let t = this.teachers.find(x => x.id === teacherId);
+            t.userId = { id: null };
+          }
+        });
+    },
+
     saveTeacher() {
+      if (this.checkErrors()) return;
+
+      $('#modalCreate').modal('hide');
+
       this.$store.state.profile.loadMinData();
       let token = this.$store.state.profile.data.token;
 
@@ -226,11 +380,27 @@ export default {
         if (result === true) {
           this.teachers.push(this.$store.state.teachers.data);
           this.teachers = this.teachers.slice().sort((a, b) => b.shortName - a.shortName);
+
+          this.restore();
+
         } else {
           this.$router.push({ name: 'notFoundPage' });
         }
       });
     },
+
+    restore() {
+      this.newTeacher = {
+        fullName: '',
+        shortName: '',
+        priority: '',
+        description: '',
+        email: '',
+        facultyIds: [],
+        departmentId: {},
+      };
+    },
+
     comparer(prop, val) {
       return function(a, b) {
         if (a[prop] > b[prop]) {
@@ -242,6 +412,7 @@ export default {
         }
       };
     },
+
     chooseUniversity(universityFullName) {
       const university = this.universities.find(x => x.fullName === universityFullName);
 
@@ -259,6 +430,7 @@ export default {
         });
 
     },
+
     chooseFaculty(facultyFullName) {
       this.btnSelectFacultyText = (this.faculties.find(x => x.fullName === facultyFullName)).shortName;
     },

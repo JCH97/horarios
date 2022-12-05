@@ -24,7 +24,7 @@ export class University extends DomainEntity<UniversityProps> {
   }
 
   get priority(): number {
-    return this.props.priority;
+    return this.props.priority ?? 1;
   }
 
   get createdAt(): Date {

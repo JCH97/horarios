@@ -60,18 +60,35 @@
           </div>
           <div class='modal-body'>
             <form>
-              <div class='form-group'>
-                <label for='input-fullName' class='col-form-label'>Nombre completo:</label>
-                <input type='text' class='form-control' id='input-fullName' v-model='newLocal.fullName'>
+
+              <div class='row'>
+                <div class='col col-md-6 form-group'>
+                  <label for='input-fullName' class='col-form-label'>Nombre completo:</label>
+                  <input type='text'
+                         :class="{'form-control': true, 'border-danger': errors & 1}"
+                         id='input-fullName'
+                         v-model='newLocal.fullName'>
+                </div>
+                <div class='col col-md-6 form-group'>
+                  <label for='input-shortName' class='col-form-label'>Nombre Reducido:</label>
+                  <input type='text'
+                         :class="{'form-control': true, 'border-danger': errors & (1 << 1)}"
+                         id='input-shortName'
+                         v-model='newLocal.shortName'>
+                </div>
               </div>
-              <div class='form-group'>
-                <label for='input-shortName' class='col-form-label'>Nombre:</label>
-                <input type='text' class='form-control' id='input-shortName' v-model='newLocal.shortName'>
+
+              <div class='row'>
+                <div class='col col-md-6 form-group'>
+                  <label for='input-priority' class='col-form-label'>Prioridad:</label>
+                  <input type='number' class='form-control' id='input-priority' v-model='newLocal.priority' />
+                </div>
+                <div class='col col-md-6 form-group'>
+                  <label for='input-capacity' class='col-form-label'>Capacidad:</label>
+                  <input class='form-control' type='number' id='input-capacity' v-model='newLocal.capacity'></input>
+                </div>
               </div>
-              <div class='form-group'>
-                <label for='input-priority' class='col-form-label'>Prioridad:</label>
-                <input type='number' class='form-control' id='input-priority' v-model='newLocal.priority' />
-              </div>
+
               <div class='form-group'>
                 <label for='input-description' class='col-form-label'>Descripcion:</label>
                 <textarea class='form-control' id='input-description' v-model='newLocal.description'></textarea>
@@ -80,7 +97,7 @@
           </div>
           <div class='modal-footer'>
             <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancelar</button>
-            <button type='button' class='btn btn-primary' data-dismiss='modal' @click='saveLocal()'>
+            <button type='button' class='btn btn-primary' @click='saveLocal()'>
               Guardar
             </button>
           </div>
@@ -101,12 +118,14 @@ export default {
       val: 1,
       facultyId: '',
       faculty: {},
+      errors: 0,
       newLocal: {
         fullName: '',
         shortName: '',
         priority: '',
         description: '',
         facultyId: '',
+        capacity: '',
       },
     };
   },
@@ -148,13 +167,23 @@ export default {
     unsetVal() {
       this.val = -1;
     },
+    restore() {
+      this.newLocal = {
+        fullName: '',
+        shortName: '',
+        priority: '',
+        description: '',
+        facultyId: '',
+        capacity: '',
+      };
+    },
     removeLocal(localId) {
       this.$store.state.profile.loadMinData();
       let token = this.$store.state.profile.data.token;
 
       this.$store.state.locals.delete(token, localId).then(result => {
         if (result === true) {
-          this.locals = this.locals.filter(u => u.id != localId);
+          this.locals = this.locals.filter(u => u.id !== localId);
           this.locals = this.locals.slice().sort((a, b) => b.shortName - a.shortName);
         } else {
           this.$router.push({ name: 'notFoundPage' });
@@ -164,7 +193,21 @@ export default {
     addLocal() {
       $('#modalCreate').modal('show');
     },
+    checkErrors() {
+      this.errors |= (this.newLocal.fullName === '') ? 1 : this.errors;
+      this.errors |= (this.newLocal.shortName === '') ? (1 << 1) : this.errors;
+
+      setTimeout(() => {
+        this.errors = 0;
+      }, 3000);
+
+      return this.errors > 0;
+    },
     saveLocal() {
+      if (this.checkErrors()) return;
+
+      $('#modalCreate').modal('hide');
+
       this.$store.state.profile.loadMinData();
       let token = this.$store.state.profile.data.token;
 
@@ -175,6 +218,9 @@ export default {
         if (result === true) {
           this.locals.push(this.$store.state.locals.data);
           this.locals = this.locals.slice().sort((a, b) => b.shortName - a.shortName);
+
+          this.restore();
+
         } else {
           this.$router.push({ name: 'notFoundPage' });
         }

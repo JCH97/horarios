@@ -12,12 +12,12 @@
                 <div class='col-lg-6'>
                   <div class='p-5'>
                     <div class='text-center'>
-                      <h1 class='h5 text-gray-900 mb-4'>Bienvenido a <strong>Calendario MatCom</strong></h1>
+                      <h1 class='h5 text-gray-900 mb-4'>Bienvenido a <strong>Calendario</strong></h1>
                     </div>
                     <form class='user'>
                       <div class='form-group'>
                         <input :class="{'form-control': true, 'form-control-user': true, 'border-danger': showError}"
-                               id='exampleInputEmail' aria-describedby='emailHelp' placeholder='Introduzca su usuario'
+                               id='exampleInputEmail' aria-describedby='emailHelp' placeholder='Introduzca su email'
                                v-model.trim='email'>
                       </div>
                       <div class='form-group'>
@@ -28,7 +28,7 @@
                       </div>
                       <div v-if='showError' class='form-group'>
                         <div class='card bg-gradient-danger text-white small animated--grow-in'>
-                          <div class='card-body'>Usuario o Constraseña Invalidos</div>
+                          <div class='card-body'>Email o Constraseña Invalidos</div>
                         </div>
                       </div>
                       <!-- <div class="form-group">
@@ -37,18 +37,27 @@
                               <label class="custom-control-label" for="customCheck">Recuerdame</label>
                           </div>
                       </div> -->
-                      <a @click='validateUser' class='btn btn-primary btn-user btn-block text-white'>
+                      <a @click='validateUser' class='btn btn-primary btn-user btn-block text-white'
+                         style='cursor: pointer'>
                         Iniciar Sesión
                       </a>
+                      <router-link :to="{name: 'homePage'}" class='btn btn-primary btn-user btn-block text-white'
+                                   style='cursor: pointer'>
+                        Entrar como usuario anónimo
+                      </router-link>
                     </form>
                     <hr>
-                    <!-- <div class="text-center">
-                        <a class="small" href="forgot-password.html">Recuperar Contraseña</a>
-                    </div> -->
                     <div class='text-center'>
                       <router-link :to="{name: 'registerPage'}" class='small text-dark'><strong>Registrarse</strong>
                       </router-link>
                     </div>
+                    <!-- <div class="text-center">
+                        <a class="small" href="forgot-password.html">Recuperar Contraseña</a>
+                    </div> -->
+                    <!--                    <div class='text-center'>-->
+                    <!--                      <router-link :to="{name: 'registerPage'}" class='small text-dark'><strong>Registrarse</strong>-->
+                    <!--                      </router-link>-->
+                    <!--                    </div>-->
                   </div>
                 </div>
               </div>
@@ -56,7 +65,7 @@
               <footer class='sticky-footer'>
                 <div class='container'>
                   <div class='copyright text-center text-dark'>
-                    <strong>Facultad de Matemática y Computación de la Universidad de La Habana &copy; 2019</strong>
+                    <strong>Facultad de Matemática y Computación de la Universidad de La Habana &copy; 2022</strong>
                   </div>
                 </div>
               </footer>

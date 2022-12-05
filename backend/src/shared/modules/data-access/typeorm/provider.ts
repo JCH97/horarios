@@ -17,7 +17,7 @@ export const typeOrmProvider = TypeOrmModule.forRootAsync({
       cli: {
         migrationsDir: __dirname + '/../../../../../migrations/',
       },
-      logging: config.app.nodeEnv !== 'production',
+      // logging: config.app.nodeEnv !== 'production',
       ...config.database,
     } as ConnectionOptions;
   },

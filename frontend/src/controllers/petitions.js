@@ -82,4 +82,24 @@ export default {
   clearHeaders() {
     this.headers = {};
   },
+  processResponse(response) {
+
+    if (response.hasOwnProperty('code'))
+      response.statusCode = response.code;
+
+
+    if (!response.hasOwnProperty('statusCode')) {
+      return {
+        ...response,
+        statusCode: 200,
+      };
+    }
+
+    if (response.statusCode >= 400) {
+      return {
+        ...response,
+        error: `\n${response.message}.\n\nPor favor haga login nuevamente.`,
+      };
+    }
+  },
 };

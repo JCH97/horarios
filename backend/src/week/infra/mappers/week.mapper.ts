@@ -2,11 +2,15 @@ import { WeekPersistence } from '../entities/week.persistence';
 import { Week } from '../../domain/entities/week.entity';
 import { WeekDto } from '../../application/dtos/week.dto';
 import { PaginatedFindResult } from '../../../shared/core/PaginatedFindResult';
+import { SemesterMapper } from '../../../semester/infra/mappers/semester.mapper';
+import { WeekDetailsDto } from '../../application/dtos/week.details.dto';
 
 export class WeekMapper {
   public static PersistToDomain(persist: WeekPersistence): Week {
     const domain = Week.Create({
       ...persist,
+      semesterId: { id: persist.semesterId },
+      semester: persist.semester ? SemesterMapper.PersistToDomain(persist.semester) : null,
     }, persist.id);
 
     // TODO: handle this
@@ -25,6 +29,11 @@ export class WeekMapper {
       priority: domain.priority,
       createdAt: domain.createdAt,
       updatedAt: domain.updatedAt,
+      duration: domain.duration,
+      firstDate: domain.firstDate,
+      endDate: domain.endDate,
+      semester: domain.semesterId,
+      number: domain.number,
     };
   }
 
@@ -38,8 +47,8 @@ export class WeekMapper {
       createdAt: domain.createdAt,
       updatedAt: domain.updatedAt,
       duration: domain.duration,
-      firstDay: domain.firstDay,
-      endDay: domain.endDay,
+      firstDate: domain.firstDate,
+      endDate: domain.endDate,
       number: domain.number,
     };
   }
@@ -52,4 +61,15 @@ export class WeekMapper {
       currentPage: pag.currentPage,
     };
   }
+
+
+  public static DomainToDetails(domain: Week): WeekDetailsDto {
+    let base = WeekMapper.DomainToDto(domain);
+
+    return {
+      ...base,
+      semester: domain.semester ? SemesterMapper.DomainToDetails(domain.semester) : null,
+    };
+  }
+
 }

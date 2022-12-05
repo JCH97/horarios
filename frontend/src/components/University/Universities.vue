@@ -61,11 +61,17 @@
             <form>
               <div class='form-group'>
                 <label for='input-fullName' class='col-form-label'>Nombre completo:</label>
-                <input type='text' class='form-control' id='input-fullName' v-model='newUniversity.fullName'>
+                <input type='text'
+                       :class="{'form-control': true, 'border-danger': errors & 1}"
+                       id='input-fullName'
+                       v-model='newUniversity.fullName'>
               </div>
               <div class='form-group'>
-                <label for='input-shortName' class='col-form-label'>Nombre:</label>
-                <input type='text' class='form-control' id='input-shortName' v-model='newUniversity.shortName'>
+                <label for='input-shortName' class='col-form-label'>Nombre Reducido:</label>
+                <input type='text'
+                       :class="{'form-control': true, 'border-danger': errors & (1 << 1)}"
+                       id='input-shortName'
+                       v-model='newUniversity.shortName'>
               </div>
               <div class='form-group'>
                 <label for='input-priority' class='col-form-label'>Prioridad:</label>
@@ -79,7 +85,7 @@
           </div>
           <div class='modal-footer'>
             <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancelar</button>
-            <button type='button' class='btn btn-primary' data-dismiss='modal' @click='saveUniversity()'>
+            <button type='button' class='btn btn-primary' @click='saveUniversity()'>
               Guardar
             </button>
           </div>
@@ -98,6 +104,7 @@ export default {
       universities: [],
       text: '',
       val: 1,
+      errors: 0,
       newUniversity: {
         fullName: '',
         shortName: '',
@@ -137,7 +144,7 @@ export default {
 
       this.$store.state.universities.delete(token, universityId).then(result => {
         if (result === true) {
-          this.universities = this.universities.filter(u => u.id != universityId);
+          this.universities = this.universities.filter(u => u.id !== universityId);
           this.universities = this.universities.slice().sort((a, b) => b.shortName - a.shortName);
         } else {
           this.$router.push({ name: 'notFoundPage' });
@@ -147,11 +154,25 @@ export default {
     addUniversity() {
       $('#modalCreate').modal('show');
     },
+    checkErrors() {
+      this.errors |= (this.newUniversity.fullName === '') ? 1 : this.errors;
+      this.errors |= (this.newUniversity.shortName === '') ? (1 << 1) : this.errors;
+
+      setTimeout(() => {
+        this.errors = 0;
+      }, 3000);
+
+      return this.errors > 0;
+    },
     saveUniversity() {
+      if (this.checkErrors()) return;
+      $('#modalCreate').modal('hide')
+
+      ;
       this.$store.state.profile.loadMinData();
       let token = this.$store.state.profile.data.token;
-      this.$store.state.universities.create(token, this.newUniversity).then(result => {
 
+      this.$store.state.universities.create(token, this.newUniversity).then(result => {
         if (result === true) {
           this.universities.push(this.$store.state.universities.data);
           this.universities = this.universities.slice().sort((a, b) => b.shortName - a.shortName);

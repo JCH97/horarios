@@ -17,7 +17,7 @@ export class MajorPersistence extends PersistentEntity {
   @Column({ type: 'text' })
   description: string;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 1 })
   priority: number;
 
   @Column({ type: 'int' })
@@ -38,12 +38,12 @@ export class MajorPersistence extends PersistentEntity {
     student => student.major)
   students: StudentPersistence[];
 
-  @OneToOne(
+  @OneToMany(
     () => LessonPersistence,
     lesson => lesson.major,
     { nullable: true },
   )
-  lesson: LessonPersistence;
+  lesson: LessonPersistence[];
 
   @OneToMany(
     () => GroupPersistence,

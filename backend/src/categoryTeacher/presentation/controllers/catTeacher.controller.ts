@@ -1,7 +1,10 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response, UseGuards } from '@nestjs/common';
 import {
-  CreateCatTeacherUseCase, FindAllCatTeacherUseCase,
-  FindByIdCatTeacherUseCase, PaginatedCatTeacherUseCase, RemoveCatTeacherUseCase,
+  CreateCatTeacherUseCase,
+  FindAllCatTeacherUseCase,
+  FindByIdCatTeacherUseCase,
+  PaginatedCatTeacherUseCase,
+  RemoveCatTeacherUseCase,
   UpdateCatTeacherUseCase,
 } from '../../application/useCases';
 import { ProcessResponse } from '../../../shared/core/utils/processResponse';
@@ -11,6 +14,9 @@ import { CatTeacherFindAllDto } from '../../application/dtos/catTeacher.find-all
 import { CatTeacherPaginatedDto } from '../../application/dtos/catTeacher.paginated.dto';
 import { CatTeacherCreateDto } from '../../application/dtos/catTeacher.create.dto';
 import { CatTeacherUpdateDto } from '../../application/dtos/catTeacher.update.dto';
+import { JwtAuthGuard } from '../../../auth/application/guards/jwtAuthGuard';
+import { PermissionsDecorator } from 'src/auth/application/decorator/permission.decorator';
+import { UserPermissions } from 'src/user/domain/enums/user.permissions';
 
 @Controller('category_teacher')
 export class CatTeacherController {
@@ -52,7 +58,8 @@ export class CatTeacherController {
     return ProcessResponse.setResponse(res, pag, CatTeacherMapper.PaginatedToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_CAT_TEACHER)
   @Post('create')
   async create(@Body() body: CatTeacherCreateDto, @Response() res) {
 
@@ -62,7 +69,8 @@ export class CatTeacherController {
     return ProcessResponse.setResponse<CatTeacher>(res, university, CatTeacherMapper.DomainToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_CAT_TEACHER)
   @Put()
   async update(@Body() body: CatTeacherUpdateDto, @Response() res) {
     this._logger.log('Update');
@@ -71,7 +79,8 @@ export class CatTeacherController {
     return ProcessResponse.setResponse<CatTeacher>(res, university, CatTeacherMapper.DomainToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_CAT_TEACHER)
   @Delete()
   async delete(@Body() body: { id: string }, @Response() res) {
     this._logger.log('Delete');

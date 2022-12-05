@@ -1,5 +1,5 @@
 <template>
-  <div id='university'>
+  <div id='major'>
     <div class='row'>
       <div class='col-12'>
         <div class='card mb-4 w-100 border-bottom-primary'>

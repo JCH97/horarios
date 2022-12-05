@@ -19,7 +19,7 @@ export class FacultyPersistence extends PersistentEntity {
   @Column({ type: 'text' })
   description: string;
 
-  @Column({ type: 'int' })
+  @Column({ type: 'int', default: 1 })
   priority: number;
 
   @Column({ type: 'text', name: 'university_id' })

@@ -17,7 +17,7 @@ export class LessonRepository extends BaseRepository<Lesson, LessonPersistence> 
     const lesson = await this
       ._entityRepository
       .findOne(id, {
-        relations: ['major', 'local', 'teacher'],
+        relations: ['major', 'local', 'teacher', 'semesters'],
       });
 
     return LessonMappers.PersistToDomain(lesson);

@@ -49,25 +49,24 @@ export default {
       })
       .catch(err => console.log(err));
   },
-  // getAll(token, filter = {}) {
-  //   Petitions.clearHeaders();
-  //   Petitions.set_JSONHeaders(null, null, token);
-  //
-  //   return Petitions.post(Endpoints.universitiesGetAll, {
-  //     'filter': filter,
-  //   })
-  //     .then(response => response.json())
-  //     .then(json => {
-  //       json = json.items;
-  //
-  //       if (json !== null && !json.hasOwnProperty('error')) {
-  //         this.data = json;
-  //         this.saveMinData();
-  //         return true;
-  //       }
-  //       return false;
-  //     });
-  // },
+  getAll: function(token, filter = {}) {
+    Petitions.clearHeaders();
+    Petitions.set_JSONHeaders(null, null, token);
+
+    return Petitions.post(Endpoints.typeClassesGetAll, {
+      'filter': filter,
+    })
+      .then(response => response.json())
+      .then(json => {
+        json = json.items;
+
+        this.data = json;
+        this.saveMinData();
+
+        return json !== null && !json.hasOwnProperty('error');
+
+      });
+  },
   getData(token, pageNum = 1, pageLimit = 10, filter = {}) {
     Petitions.clearHeaders();
     Petitions.set_JSONHeaders(null, null, token);

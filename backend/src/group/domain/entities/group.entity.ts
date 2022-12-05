@@ -11,6 +11,7 @@ type GroupProps = DomainBaseProps & DomainTimestamp & {
   majorId?: { id: string };
   major?: Major | any;
   year: number;
+  color: string;
 };
 
 type newGroupProps = Omit<GroupProps,
@@ -30,8 +31,12 @@ export class Group extends DomainEntity<GroupProps> {
     return this.props.description;
   }
 
+  get color(): string {
+    return this.props.color;
+  }
+
   get priority(): number {
-    return this.props.priority;
+    return this.props.priority ?? 1;
   }
 
   get createdAt(): Date {

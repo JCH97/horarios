@@ -1,3 +1,5 @@
 import { WeekDto } from './week.dto';
 
-export type WeekCreateDto = WeekDto;
+export type WeekCreateDto = WeekDto & {
+  semesterId: { id: string };
+};

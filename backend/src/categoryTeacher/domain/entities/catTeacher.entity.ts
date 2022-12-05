@@ -30,7 +30,7 @@ export class CatTeacher extends DomainEntity<CatTeacherProps> {
   }
 
   get priority(): number {
-    return this.props.priority;
+    return this.props.priority ?? 1;
   }
 
   get createdAt(): Date {

@@ -20,91 +20,121 @@
             <span>Inicio</span></router-link>
         </li>
 
+
+        <!--        <li class='nav-item' v-if='this.isLogued() && this.viewPanel()'>-->
+        <!--          <router-link :to="{name: 'usersPage'}" class='nav-link'>-->
+        <!--            <i class='fas fa-fw fa-user'></i>-->
+        <!--            <span>Usuarios</span></router-link>-->
+        <!--        </li>-->
+
+
         <li class='nav-item'>
-          <router-link :to="{name: 'usersPage'}" class='nav-link'>
-            <i class='fas fa-fw fa-user'></i>
-            <span>Usuarios</span></router-link>
+          <a
+            class='nav-link' href='#' data-toggle='collapse' data-target='#collapse_horarios' aria-expanded='true'
+            aria-controls='collapse_horarios'>
+            <i class='fas fa-fw fa-folder'></i>
+            <span>Horario Utilidades</span>
+          </a>
         </li>
 
-        <button class='btn btn-primary collapse-header' data-toggle='collapse' data-target='#collapse_horarios'
-                aria-expanded='false' aria-controls='collapse_horarios'>
-          Horario Utilidades
-        </button>
+        <div class='mx-4'>
+          <div class='collapse' id='collapse_horarios' v-if='this.isLogued()'>
 
-        <div class='collapse' id='collapse_horarios'>
+            <li v-if='this.viewPanel()' class='nav-item form-inline'>
+              <router-link @click.native='scrollToTop()' :to="{name: 'universitiesPage'}" class='nav-link'>
+                <i class='fas fa-fw fa-building'></i>
+                <span>Universidades</span>
 
-          <li class='nav-item form-inline'>
-            <router-link :to="{name: 'universitiesPage'}" class='nav-link'>
-              <i class='fas fa-fw fa-building'></i>
-              <span>Universidades</span>
-              <i class='fas fa-lock px-4'></i>
-            </router-link>
-          </li>
+              </router-link>
+            </li>
 
-          <li class='nav-item form-inline'>
-            <router-link :to="{name: 'chooseFacultyPage'}" class='nav-link'>
-              <i class='fas fa-fw fa-building'></i>
-              <span>Facultades</span>
-              <i class='fas fa-lock px-4'></i>
-            </router-link>
-          </li>
+            <li v-if='this.viewPanel()' class='nav-item form-inline'>
+              <router-link @click.native='scrollToTop()' :to="{name: 'chooseFacultyPage'}" class='nav-link'>
+                <i class='fas fa-fw fa-building'></i>
+                <span>Facultades</span>
 
+              </router-link>
+            </li>
 
-          <li class='nav-item form-inline'>
-            <router-link :to="{name: 'chooseMajorPage'}" class='nav-link'>
-              <i class='fas fa-fw fa-building'></i>
-              <span>Carreras</span>
-              <i class='fas fa-lock px-4'></i>
-            </router-link>
-          </li>
+            <li v-if='this.viewPanel()' class='nav-item form-inline'>
+              <router-link @click.native='scrollToTop()' :to="{name: 'chooseMajorPage'}" class='nav-link'>
+                <i class='fas fa-fw fa-building'></i>
+                <span>Carreras</span>
 
-          <li class='nav-item form-inline'>
-            <router-link :to="{name: 'chooseLocalPage'}" class='nav-link'>
-              <i class='fas fa-fw fa-building'></i>
-              <span>Locales</span>
-              <i class='fas fa-lock px-4'></i>
-            </router-link>
-          </li>
+              </router-link>
+            </li>
 
-          <li class='nav-item form-inline'>
-            <router-link :to="{name: 'chooseTeacherPage'}" class='nav-link'>
-              <i class='fas fa-fw fa-people-carry'></i>
-              <span>Profesores</span>
-              <i class='fas fa-lock px-4'></i>
-            </router-link>
-          </li>
+            <li v-if='this.viewPanel()' class='nav-item form-inline'>
+              <router-link @click.native='scrollToTop()' :to="{name: 'chooseLocalPage'}" class='nav-link'>
+                <i class='fas fa-fw fa-building'></i>
+                <span>Locales</span>
 
-          <li class='nav-item form-inline'>
-            <router-link :to="{name: 'chooseLessonPage'}" class='nav-link'>
-              <i class='fas fa-fw fa-building'></i>
-              <span>Asignaturas</span>
-              <i class='fas fa-lock px-4'></i>
-            </router-link>
-          </li>
+              </router-link>
+            </li>
 
-          <li class='nav-item form-inline'>
-            <router-link :to="{name: 'typeClassesPage'}" class='nav-link'>
-              <i class='fas fa-fw fa-th-list'></i>
-              <span>Tipos de clase</span>
-              <i class='fas fa-lock px-4'></i>
-            </router-link>
-          </li>
-          <li class='nav-item form-inline'>
-            <router-link :to="{name: 'chooseGroupPage'}" class='nav-link'>
-              <i class='fas fa-fw fa-people-carry'></i>
-              <span>Grupos</span>
-              <i class='fas fa-lock px-4'></i>
-            </router-link>
-          </li>
-          <li class='nav-item form-inline'>
-            <router-link :to="{name: 'chooseDepartmentPage'}" class='nav-link'>
-              <i class='fas fa-fw fa-people-carry'></i>
-              <span>Departamentos</span>
-              <i class='fas fa-lock px-4'></i>
-            </router-link>
-          </li>
+            <li v-if='this.viewPanel()' class='nav-item form-inline'>
+              <router-link @click.native='scrollToTop()' :to="{name: 'chooseTeacherPage'}" class='nav-link'>
+                <i class='fas fa-fw fa-people-carry'></i>
+                <span>Profesores</span>
+              </router-link>
+            </li>
+
+            <li v-if='this.handleRestrictions() || this.viewPanel()' class='nav-item form-inline'>
+              <router-link @click.native='scrollToTop()' :to="{name: 'restrictionsPage'}" class='nav-link'>
+                <i class='fas fa-fw fa-building'></i>
+                <span>Restricciones</span>
+              </router-link>
+            </li>
+
+            <li v-if='this.viewPanel()' class='nav-item form-inline'>
+              <router-link @click.native='scrollToTop()' :to="{name: 'breachedRestrictionsPage'}" class='nav-link'>
+                <i class='fas fa-fw fa-building'></i>
+                <span>Restr. Incumplidas</span>
+              </router-link>
+            </li>
+
+            <li v-if='this.viewPanel()' class='nav-item form-inline'>
+              <router-link @click.native='scrollToTop()' :to="{name: 'chooseLessonPage'}" class='nav-link'>
+                <i class='fas fa-fw fa-building'></i>
+                <span>Asignaturas</span>
+
+              </router-link>
+            </li>
+
+            <li v-if='this.viewPanel()' class='nav-item form-inline'>
+              <router-link @click.native='scrollToTop()' :to="{name: 'typeClassesPage'}" class='nav-link'>
+                <i class='fas fa-fw fa-th-list'></i>
+                <span>Tipos de clase</span>
+
+              </router-link>
+            </li>
+
+            <li v-if='this.viewPanel()' class='nav-item form-inline'>
+              <router-link @click.native='scrollToTop()' :to="{name: 'chooseGroupPage'}" class='nav-link'>
+                <i class='fas fa-fw fa-people-carry'></i>
+                <span>Grupos</span>
+
+              </router-link>
+            </li>
+
+            <li v-if='this.viewPanel()' class='nav-item form-inline'>
+              <router-link @click.native='scrollToTop()' :to="{name: 'chooseDepartmentPage'}" class='nav-link'>
+                <i class='fas fa-fw fa-people-carry'></i>
+                <span>Departamentos</span>
+
+              </router-link>
+            </li>
+
+            <li v-if='this.viewPanel()' class='nav-item form-inline'>
+              <router-link @click.native='scrollToTop()' :to="{name: 'semestersPage'}" class='nav-link'>
+                <i class='fas fa-fw fa-people-carry'></i>
+                <span>Semestres</span>
+
+              </router-link>
+            </li>
+          </div>
+
         </div>
-
         <!-- Divider -->
         <hr class='sidebar-divider'>
         <!-- Heading -->
@@ -154,6 +184,23 @@
             </h1>
             <!-- Topbar Navbar -->
             <ul class='navbar-nav ml-auto'>
+
+              <!-- Happinnes-->
+              <li class='nav-item dropdown no-arrow mx-1'>
+                <a class='nav-link dropdown-toggle' href='#' id='userDropdown' role='button'
+                   data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                  <i class='fas fa-smile mr-2'
+                     :style='{color: [happiness >= 80 ? "#2BC10A" : happiness >= 60 ? "#EED013" : "#CD101C"] }'>
+                  </i>
+                  <span
+                    class='mr-3 d-none d-lg-inline text-gray-600 small'>
+                    {{ happiness }}
+                  </span>
+                </a>
+              </li>
+
+              <div class='topbar-divider d-none d-sm-block'></div>
+
               <!-- Nav Item - Alerts -->
               <li class='nav-item dropdown no-arrow mx-1'>
                 <a class='nav-link dropdown-toggle' href='#' id='alertsDropdown' role='button'
@@ -176,7 +223,7 @@
                           </div>
                       </div>
                       <div>
-                          <div class="small text-gray-500">12 de diciembre del 2019</div>
+                          <div class="small text-gray-500">12 de diciembre del 2020</div>
                           <span class="font-weight-bold">Un nuevo reporte esta listo para ser descargado</span>
                           <div class="small text-gray-500">Grupo(s): C322</div>
                       </div>
@@ -188,7 +235,7 @@
                           </div>
                       </div>
                       <div>
-                          <div class="small text-gray-500">7 de diciembre del 2019</div>
+                          <div class="small text-gray-500">7 de diciembre del 2020</div>
                           290.29 dolares han sido depositados en su cuenta.
                       </div>
                   </a> -->
@@ -209,36 +256,57 @@
                   <span v-else class='dropdown-item text-center text-dark'>No hay notificaciones para mostrar</span>
                 </div>
               </li>
+
               <div class='topbar-divider d-none d-sm-block'></div>
-              <!-- Nav Item - User Information -->
-              <li class='nav-item dropdown no-arrow'>
-                <a class='nav-link dropdown-toggle' href='#' id='userDropdown' role='button'
-                   data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
-                  <span class='mr-3 d-none d-lg-inline text-gray-600 small'>{{ username }}</span>
-                  <img class='img-profile rounded-circle' :src='user_pic_location'>
-                </a>
-                <!-- Dropdown - User Information -->
-                <div class='dropdown-menu dropdown-menu-right shadow animated--grow-in'
-                     aria-labelledby='userDropdown'>
-                  <router-link :to="{name: 'profilePage'}" class='dropdown-item'>
-                    <i class='fas fa-user fa-sm fa-fw mr-2 text-gray-400'></i>
-                    Perfil
-                  </router-link>
-                  <router-link v-if='viewPanel()' :to="{name: 'panelPage'}" class='dropdown-item'>
-                    <i class='fas fa-edit fa-sm fa-fw mr-2 text-gray-400'></i>
-                    Administrar
-                  </router-link>
-                  <!-- <a class="dropdown-item" href="#">
-                      <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
-                      Configuración
-                  </a> -->
-                  <div class='dropdown-divider'></div>
-                  <a class='dropdown-item' href='#' data-toggle='modal' data-target='#logoutModal'>
-                    <i class='fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400'></i>
-                    Cerrar Sesión
+
+              <div v-if='isLogued()'>
+
+                <li class='nav-item dropdown no-arrow'>
+                  <a class='nav-link dropdown-toggle' href='#' id='userDropdown' role='button'
+                     data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                    <span class='mr-3 d-none d-lg-inline text-gray-600 small'>{{ username }}</span>
+                    <i class='fas fa-user fa-lg fa-fw mr-2 text-gray-400'></i>
+                    <!--                    <img class='img-profile rounded-circle' :src='user_pic_location'>-->
                   </a>
-                </div>
-              </li>
+                  <!-- Dropdown - User Information -->
+                  <div class='dropdown-menu dropdown-menu-right shadow animated--grow-in'
+                       aria-labelledby='userDropdown'>
+                    <router-link :to="{name: 'profilePage'}" class='dropdown-item'>
+                      <i class='fas fa-user fa-sm fa-fw mr-2 text-gray-400'></i>
+                      Perfil
+                    </router-link>
+                    <router-link v-if='viewPanel()' :to="{name: 'panelPage'}" class='dropdown-item'>
+                      <i class='fas fa-edit fa-sm fa-fw mr-2 text-gray-400'></i>
+                      Administrar
+                    </router-link>
+                    <!-- <a class="dropdown-item" href="#">
+                        <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
+                        Configuración
+                    </a> -->
+                    <div class='dropdown-divider'></div>
+                    <a class='dropdown-item' href='#' data-toggle='modal' data-target='#logoutModal'>
+                      <i class='fas fa-sign-out-alt fa-sm fa-fw mr-2 text-gray-400'></i>
+                      Cerrar Sesión
+                    </a>
+                  </div>
+                </li>
+
+              </div>
+              <div v-else>
+
+                <li class='nav-item dropdown no-arrow'>
+                  <a class='nav-link dropdown-toggle' href='#' id='userDropdown' role='button'
+                     data-toggle='dropdown' aria-haspopup='true' aria-expanded='false'>
+                    <!--                    <img class='img-profile rounded-circle' :src='user_pic_location'>-->
+                    <router-link :to="{name: 'loginPage'}" class='dropdown-item'>
+                      <i class='fas fa-user fa-fw mr-2 text-gray-400'></i>
+                      <span class='mr-3 d-none d-lg-inline text-gray-600 small'>Login</span>
+                    </router-link>
+                  </a>
+                </li>
+
+              </div>
+
             </ul>
           </nav>
           <!-- End of Topbar -->
@@ -267,6 +335,7 @@
     <!-- <a class="scroll-to-top rounded" href="#page-top">
         <i class="fas fa-angle-up"></i>
     </a> -->
+
     <!-- Logout Modal-->
     <div class='modal fade' id='logoutModal' tabindex='-1' role='dialog' aria-labelledby='exampleModalLabel'
          aria-hidden='true'>
@@ -285,6 +354,7 @@
         </div>
       </div>
     </div>
+
   </div>
 </template>
 
@@ -292,6 +362,7 @@
 import Permission from '@/utils/permission';
 import { renderPresentation } from '../utils/render_date';
 import { convertGroupsToStr } from '../utils/utils';
+import Condition_types from '@/controllers/Restrictions/condition_types';
 
 export default {
   name: 'Home',
@@ -302,25 +373,53 @@ export default {
       username: '',
       notifications: [],
       notifications_unseened: 0,
+      happiness: 100,
     };
   },
   methods: {
+    getHappiness() {
+      this.$store.state.restrictions.getHappiness({})
+        .then(result => {
+          if (result === true) {
+            this.happiness = (this.$store.state.restrictions.data[Condition_types.HAPPINESS]).happiness;
+            this.happiness = isNaN(this.happiness) || !this.happiness ? 0 : Math.trunc(this.happiness * 100);
+          }
+        });
+    },
+
+    scrollToTop() {
+      window.scrollTo(0, 0);
+    },
+
     logoutUser() {
       this.$store.state.profile.logOut();
       this.$router.push({ name: 'loginPage' });
     },
+
     openNewTab(url) {
       window.open(url, '_blank');
     },
+
     viewPanel() {
       return this.$store.state.profile.hasRole(Permission.VIEW_PANEL);
     },
+
+    handleRestrictions() {
+      return this.$store.state.profile.hasRole(Permission.HANDLE_RESTRICTIONS);
+    },
+
+    isLogued() {
+      return this.$store.state.profile.isLogued();
+    },
+
     render_date(start) {
       return renderPresentation(start, null);
     },
+
     parseGroupsToStr(groups) {
       return convertGroupsToStr(groups);
     },
+
     seen(id, index) {
       let token = this.$store.state.profile.data.token;
       this.$store.state.notifications.setSeened(token, id).then(status => {
@@ -329,6 +428,7 @@ export default {
       });
       this.$store.state.notifications.update();
     },
+
     loadData() {
       let token = this.$store.state.profile.data.token;
       this.$store.state.notifications.getData(token).then(() => {
@@ -341,12 +441,18 @@ export default {
       });
     },
   },
+
   created() {
     this.$store.state.profile.getData().then(() => {
       this.username = this.$store.state.profile.data.username;
     });
     this.$store.state.notifications.addUpdate('nav', this.loadData);
     this.$store.state.notifications.update();
+
+    this.getHappiness();
+  },
+  mounted() {
+    this.$root.$on('refresh_happiness', this.getHappiness);
   },
 };
 </script>

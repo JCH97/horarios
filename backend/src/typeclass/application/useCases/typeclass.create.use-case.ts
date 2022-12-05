@@ -16,7 +16,7 @@ export class CreateTypeClassUseCase implements IUseCase<TypeclassCreateDto, Prom
 
   private _logger: Logger;
 
-  constructor(private readonly localRepository: TypeclassRepository) {
+  constructor(private readonly typeClassRepository: TypeclassRepository) {
     this._logger = new Logger('CreateLocalUseCase');
   }
 
@@ -28,11 +28,11 @@ export class CreateTypeClassUseCase implements IUseCase<TypeclassCreateDto, Prom
     if (localOrError.isFailure)
       return left(localOrError);
 
-    const local: TypeClass = localOrError.unwrap();
+    const typeClass: TypeClass = localOrError.unwrap();
 
     try {
-      await this.localRepository.save(local);
-      return right(Result.Ok(local));
+      await this.typeClassRepository.save(typeClass);
+      return right(Result.Ok(typeClass));
     } catch (error) {
       return left(Result.Fail(new AppError.UnexpectedError(error)));
     }

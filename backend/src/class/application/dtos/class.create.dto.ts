@@ -5,4 +5,5 @@ export type ClassCreateDto = Omit<ClassDto, 'id' | 'createdAt' | 'updatedAt'> & 
   localId: { id: string };
   lessonId: { id: string };
   typeClassId: { id: string };
+  groupId: { id: string };
 };

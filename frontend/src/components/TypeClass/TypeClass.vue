@@ -131,7 +131,7 @@
                       </button>
 
                       <div class='dropdown-menu'>
-                        <a v-for='u in this.types' :key='u' class='dropdown-item'
+                        <a style='cursor: pointer'  v-for='u in this.types' :key='u' class='dropdown-item'
                            @click.prevent='chooseType(u)'>{{ u }}</a>
                       </div>
 
@@ -179,6 +179,10 @@ export default {
     };
   },
   methods: {
+    chooseType(u) {
+      this.btnSelectedTypeText = u;
+      this.typeClass.type = u;
+    },
     loadData() {
       this.$store.state.profile.loadMinData();
       let token = this.$store.state.profile.data.token;

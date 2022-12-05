@@ -1,6 +1,7 @@
-import {PropsBaseDto} from '../../../shared/core/PropsBaseDto';
+import { PropsBaseDto } from '../../../shared/core/PropsBaseDto';
 
 export type LocalUpdateDto = Partial<PropsBaseDto> & {
-    localId: string
+  localId: string
+  capacity?: number;
 }
 

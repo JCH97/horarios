@@ -11,8 +11,11 @@
                 <div class='col-lg'>
                   <div class='text-center'>
                     <div class='error mx-auto' data-text='403'>403</div>
-                    <p class='lead text-gray-800 mb-5'>No tiene los permisos necesarios.</p>
+                    <p class='lead text-gray-800 mb-5'>
+                      No tiene los permisos necesarios. Se recomienda hacer login nuevamente.</p>
                     <router-link :to="{ name: 'homePage' }">Ir a inicio</router-link>
+                    <br>
+                    <router-link :to="{name: 'loginPage'}"> Login</router-link>
                   </div>
                 </div>
               </div>
@@ -20,7 +23,7 @@
               <footer class='sticky-footer'>
                 <div class='container my-auto'>
                   <div class='copyright text-center my-auto text-dark'>
-                    <strong>Facultad de Matemática y Computación de la Universidad de La Habana &copy; 2019</strong>
+                    <strong>Facultad de Matemática y Computación de la Universidad de La Habana &copy; 2022</strong>
                   </div>
                 </div>
               </footer>

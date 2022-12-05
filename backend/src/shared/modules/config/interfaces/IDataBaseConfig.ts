@@ -57,4 +57,5 @@ export interface IDataBaseConfig {
    * @memberof IDataBaseConfig
    */
   synchronize?: boolean;
+  logging?: boolean;
 }

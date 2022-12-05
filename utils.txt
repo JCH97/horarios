@@ -1,0 +1,143 @@
+SELECT "class"."id"            AS "class_id",
+       "class"."created_at"    AS "class_created_at",
+       "class"."updated_at"    AS "class_updated_at",
+       "class"."shortname"     AS "class_shortName",
+       "class"."fullname"      AS "class_fullName",
+       "class"."description"   AS "class_description",
+       "class"."priority"           AS "class_priority",
+       "class"."local_id"      AS "class_local_id",
+       "class"."lesson_id"     AS "class_lesson_id",
+       "class"."type_class_id"                   AS "class_type_class_id",
+       "class"."group_id"      AS "class_group_id",
+       "class"."start"         AS "class_start",
+       "class"."resourceid"    AS "clas s_resourceId",
+       "class"."end"           AS "class_end",
+       "class"."serieid"       AS "class_serieId",
+       "class"."color"         AS "class_color",
+       "class"."week_id"       AS "class_week_id",
+       "teachers"."id"         AS "teachers_id",
+       "teachers"."created_at" AS "teachers_created_at",
+       "teachers"."updated_at" AS "tea chers_updated_at",
+       "teachers"."shortname"  AS "teachers_shortName",
+       "teachers"."fullname"   AS "teachers_fullName",
+       "teachers"."description"                      AS "teachers_description",
+       "teachers"."priority"   AS "teachers_priority",
+       "teachers"."email"      AS "teachers_email",
+       "teachers"."department_id"                 AS "teachers_department_id",
+       "teachers"."lessonid"   AS "teachers_lessonId",
+       "local"."id"            AS "local_id",
+       "local"."created_at"    AS "local_created_at",
+       "local"."updated_at"    AS "local_updated_at",
+       "local"."shortname"     AS "local_shortName",
+       "local"."fullname"      AS "local_fullName",
+       "local"."description"   AS "local_description",
+       "local"."priority"      AS "local_priority",
+       "local"."faculty_id"    AS "local_faculty_id",
+       "local"."capacity"      AS "local_capacity"
+FROM   "class" "class"
+       LEFT JOIN "class_teachers_teacher" "class_teachers"
+              ON "class_teachers"."classid" = "class"."id"
+       LEFT JOIN "teacher" "teachers"
+              ON "teachers"."id" = "class_teachers"."teacherid"
+       LEFT JOIN "local" "local"
+              ON "local"."id" = "class"."local_id"
+WHERE  (( undefined = $1 ))
+
+
+
+
+
+SELECT "class"."id"              AS "class_id",
+       "class"."created_at"      AS "class_created_at",
+       "class"."updated_at"      AS "class_updated_at",
+       "class"."shortname"       AS "class_shortName",
+       "class"."fullname"        AS "class_fullName",
+       "class"."description"     AS "class_description",
+       "clas s"."priority"             AS "class_priority",
+       "class"."local_id"        AS "class_local_id",
+       "class"."lesson_id"       AS "class_lesson_id",
+       "class"."type_class_id"                     AS "class_type_class_id",
+       "class"."group_id"        AS "class_group_id",
+       "class"."start"           AS "class_start",
+       "class"."resourceid"      AS "clas s_resourceId",
+       "class"."end"             AS "class_end",
+       "class"."serieid"         AS "class_serieId",
+       "class"."color"           AS "class_color",
+       "class"."week_id"         AS "class_week_id",
+       "teachers"."id"           AS "teachers_id",
+       "teachers"."created_at"   AS "teachers_created_at",
+       "teachers"."updated_at"   AS "teachers_updated_at",
+       "teachers"."shortname"    AS "teachers_shortName",
+       "teachers"."fullname"     AS "teachers_fullName",
+       "teachers"."description"                        AS "teachers_description",
+       "teachers"."priority"     AS "teachers_priority",
+       "teachers"."email"        AS "teachers_email",
+       "teachers"."department_id"                   AS "teachers_department_id",
+       "teachers"."lessonid"     AS "teachers_lessonId",
+       "local"."id"              AS "local_id",
+       "local"."created_at"      AS "local_created_at",
+       "local"."updated_at"      AS "local_updated_at",
+       "local"."shortname"       AS "local_shortName",
+       "local"."fullname"        AS "local_ fullName",
+       "local"."description"     AS "local_description",
+       "local"."priority"        AS "local_priority",
+       "local"."faculty_id"      AS "local_faculty _id",
+       "local"."capacity"        AS "local_capacity",
+       "lesson"."id"             AS "lesson_id",
+       "lesson"."created_at"     AS "lesson_created_at",
+       "lesson"."updated_at"                  AS "lesson_updated_at",
+       "lesson"."shortname"      AS "lesson_shortName",
+       "lesson"."fullname"       AS "lesson_fullName",
+       "lesson"."description"                    AS "lesson_description",
+       "lesson"."priority"       AS "lesson_priority",
+       "lesson"."year"           AS "lesson_year",
+       "lesson"."teacher_id"     AS "l esson_teacher_id",
+       "lesson"."local_id"       AS "lesson_local_id",
+       "lesson"."major_id"       AS "lesson_major_id",
+       "group"."id"              AS "group_id",
+       "gro up"."created_at"          AS "group_created_at",
+       "group"."updated_at"      AS "group_updated_at",
+       "group"."shortname"       AS "group_shortName",
+       "group". "fullname"       AS "group_fullName",
+       "group"."description"     AS "group_description",
+       "group"."priority"        AS "group_priority",
+       "group"."year"            AS "group_year",
+       "group"."major_id"        AS "group_major_id",
+       "group"."color"           AS "group_color",
+       "typeclass"."id"          AS "typeclass_id",
+       "typeclass" ."created_at" AS "typeclass_created_at",
+       "typeclass"."updated_at"  AS "typeclass_updated_at",
+       "typeclass"."shortname"   AS "typeclass_shor tName",
+       "typeclass"."fullname"    AS "typeclass_fullName",
+       "typeclass"."description" AS "typeclass_description",
+       "typeclass"."priority"    AS "typeclass_priority",
+       "typeclass"."type"        AS "typeclass_type",
+       "typeclass"."duration"    AS "typeclass_duration",
+       "week"."id"               AS "week_id",
+       "week"."created_at"       AS "week_created_at",
+       "week"."updated_at"       AS "week_updated_at",
+       "week"."shortname"        AS "week_shortName",
+       "week"."fullname"                  AS "week_fullName",
+       "week"."description"      AS "week_description",
+       "week"."priority"         AS "week_priority",
+       "week"."duration"         AS "we ek_duration",
+       "week"."firstdate"        AS "week_firstDate",
+       "week"."enddate"          AS "week_endDate",
+       "week"."semester_id"      AS "week_semester_id",
+       "week"."number"           AS "week_number"
+FROM   "class" "class"
+       LEFT JOIN "class_teachers_teacher" "class_teachers"
+              ON "class_teachers"."classid" = "class"."id"
+       LEFT JOIN "teacher" "teachers"
+              ON "teachers"."id" = "class_teachers"."teacherid"
+       LEFT JOIN "local" "local"
+              ON "local"."id" = "class"."local_id"
+       LEFT JOIN "lesson" "lesson"
+              ON "lesson"."id" = "class"."lesson_id"
+       LEFT JOIN "group" "group"
+              ON "group"."id" = "class"."group_id"
+       LEFT JOIN "typeclass" "typeclass"
+              ON "typeclass"."id" = "class"."type_class_id"
+       LEFT JOIN "week" "week"
+              ON "week"."id" = "class"."week_id"
+WHERE  (( undefined = $1 ))

@@ -17,21 +17,36 @@ export default {
   removeMinData() {
     localStorage.removeItem(data_key);
   },
-  create(token, body) {
+  createInSerie(token, body) {
+    Petitions.clearHeaders();
+    Petitions.set_JSONHeaders(null, null, token);
+    return Petitions.post(Endpoints.multipleCreateClass, body)
+      .then(response => response.json())
+      .then(json => {
+        json = !json.hasOwnProperty('error') ? json.items : json;
+
+        this.data = json;
+        this.saveMinData();
+
+        return json !== null && !json.hasOwnProperty('error');
+
+      });
+  },
+  deleteInSerie(token, id) {
     Petitions.clearHeaders();
     Petitions.set_JSONHeaders(null, null, token);
 
-    return Petitions.post(`${Endpoints.classes}/create`, body)
+    return Petitions.delete(Endpoints.classRemoveInSerie, { id: id })
       .then(response => response.json(), response => console.log('Error getting the response.'))
       .then(json => {
-        if (json !== null && !json.hasOwnProperty('error')) {
-          this.data = json;
-          this.saveMinData();
-          return true;
-        }
-        return false;
-      });
 
+        this.data = json;
+        this.saveMinData();
+
+        return json !== null && !json.hasOwnProperty('error');
+
+      })
+      .catch(err => console.log(err));
   },
   delete(token, id) {
     Petitions.clearHeaders();
@@ -40,12 +55,12 @@ export default {
     return Petitions.delete(Endpoints.classes, { id: id })
       .then(response => response.json(), response => console.log('Error getting the response.'))
       .then(json => {
-        if (json !== null && !json.hasOwnProperty('error')) {
-          this.data = json;
-          this.saveMinData();
-          return true;
-        }
-        return false;
+
+        this.data = json;
+        this.saveMinData();
+
+        return json !== null && !json.hasOwnProperty('error');
+
       })
       .catch(err => console.log(err));
   },
@@ -53,41 +68,38 @@ export default {
     Petitions.clearHeaders();
     Petitions.set_JSONHeaders(null, null, token);
 
-    return Petitions.post(Endpoints.universitiesGetAll, {
+    return Petitions.post(Endpoints.classesGetAll, {
       'filter': filter,
     })
       .then(response => response.json())
       .then(json => {
-        json = json.items;
+        json = json.items ? json.items : json;
 
-        if (json !== null && !json.hasOwnProperty('error')) {
-          this.data = json;
-          this.saveMinData();
-          return true;
-        }
-        return false;
+        this.data = json;
+        this.saveMinData();
+
+        return json !== null && !json.hasOwnProperty('error');
+
       });
-  }, getData(token, pageNum = 1, pageLimit = 10, filter = {}) {
+  },
+  getData(token, filter = {}, pageNum = 1, pageLimit = 100) {
     Petitions.clearHeaders();
     Petitions.set_JSONHeaders(null, null, token);
     return Petitions.post(Endpoints.classes, {
       pageParams: {
-        'pageNum': pageNum,
-        'pageLimit': pageLimit,
-      },
-      filter: filter,
+        'pageNum': pageNum, 'pageLimit': pageLimit,
+      }, filter: filter,
     })
       .then(response => response.json(), response => console.log('Error getting the response.'))
       .then(json => {
 
         json = json.items;
 
-        if (json !== null && !json.hasOwnProperty('error')) {
-          this.data = json;
-          this.saveMinData();
-          return true;
-        }
-        return false;
+        this.data = json;
+        this.saveMinData();
+
+        return json !== null && !json.hasOwnProperty('error');
+
       });
   },
 };

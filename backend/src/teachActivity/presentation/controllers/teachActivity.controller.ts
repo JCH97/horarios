@@ -1,7 +1,10 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response, UseGuards } from '@nestjs/common';
 import {
   CreateTeachActivityUseCase,
-  FindByIdTeachActivityUseCase, FindDetailsTeachActivityUseCase, PaginatedTeachActivityUseCase, RemoveTeachActivityUseCase,
+  FindByIdTeachActivityUseCase,
+  FindDetailsTeachActivityUseCase,
+  PaginatedTeachActivityUseCase,
+  RemoveTeachActivityUseCase,
   UpdateTeachActivityUseCase,
 } from '../../../teachActivity/application/useCases';
 import { ProcessResponse } from '../../../shared/core/utils/processResponse';
@@ -10,6 +13,9 @@ import { TeachActivityPaginatedDto } from '../../../teachActivity/application/dt
 import { TeachActivityCreateDto } from '../../../teachActivity/application/dtos/teachActivity.create.dto';
 import { TeachActivityUpdateDto } from '../../../teachActivity/application/dtos/teachActivity.update.dto';
 import { TeachActivityMapper } from '../../infra/mappers/teachActivity.mapper';
+import { JwtAuthGuard } from '../../../auth/application/guards/jwtAuthGuard';
+import { UserPermissions } from '../../../user/domain/enums/user.permissions';
+import { PermissionsDecorator } from '../../../auth/application/decorator/permission.decorator';
 
 @Controller('teachActivity')
 export class TeachActivityController {
@@ -52,7 +58,8 @@ export class TeachActivityController {
     return ProcessResponse.setResponse(res, pag, TeachActivityMapper.PaginatedToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_TECH_ACTIVITY)
   @Post('create')
   async create(@Body() body: TeachActivityCreateDto, @Response() res) {
 
@@ -62,7 +69,8 @@ export class TeachActivityController {
     return ProcessResponse.setResponse<TeachActivity>(res, teachActivity, TeachActivityMapper.DomainToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_TECH_ACTIVITY)
   @Put()
   async update(@Body() body: TeachActivityUpdateDto, @Response() res) {
     this._logger.log('Update');
@@ -71,7 +79,8 @@ export class TeachActivityController {
     return ProcessResponse.setResponse<TeachActivity>(res, teachActivity, TeachActivityMapper.DomainToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_TECH_ACTIVITY)
   @Delete()
   async delete(@Body() body: { id: string }, @Response() res) {
     this._logger.log('Delete');

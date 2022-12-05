@@ -28,7 +28,7 @@ export class TypeClass extends DomainEntity<TypeClassProps> {
   }
 
   get priority(): number {
-    return this.props.priority;
+    return this.props.priority ?? 1;
   }
 
   get type(): EnumActivitieType {

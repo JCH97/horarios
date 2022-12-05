@@ -61,11 +61,17 @@
             <form>
               <div class='form-group'>
                 <label for='input-fullName' class='col-form-label'>Nombre completo:</label>
-                <input type='text' class='form-control' id='input-fullName' v-model='newMajor.fullName'>
+                <input type='text'
+                       :class="{'form-control': true, 'border-danger': errors & 1}"
+                       id='input-fullName'
+                       v-model='newMajor.fullName'>
               </div>
               <div class='form-group'>
-                <label for='input-shortName' class='col-form-label'>Nombre:</label>
-                <input type='text' class='form-control' id='input-shortName' v-model='newMajor.shortName'>
+                <label for='input-shortName' class='col-form-label'>Nombre Reducido: </label>
+                <input type='text'
+                       :class="{'form-control': true, 'border-danger': errors & (1 << 1)}"
+                       id='input-shortName'
+                       v-model='newMajor.shortName'>
               </div>
               <div class='form-group'>
                 <label for='input-priority' class='col-form-label'>Prioridad:</label>
@@ -73,7 +79,10 @@
               </div>
               <div class='form-group'>
                 <label for='input-duration' class='col-form-label'>Extension (annos):</label>
-                <input type='number' class='form-control' id='input-duration' v-model='newMajor.duration' />
+                <input type='number'
+                       :class="{'form-control': true, 'border-danger': errors & (1 << 2)}"
+                       id='input-duration'
+                       v-model='newMajor.duration' />
               </div>
               <div class='form-group'>
                 <label for='input-description' class='col-form-label'>Descripcion:</label>
@@ -83,7 +92,7 @@
           </div>
           <div class='modal-footer'>
             <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancelar</button>
-            <button type='button' class='btn btn-primary' data-dismiss='modal' @click='saveMajor()'>
+            <button type='button' class='btn btn-primary' @click='saveMajor()'>
               Guardar
             </button>
           </div>
@@ -103,6 +112,7 @@ export default {
       text: '',
       val: 1,
       facultyId: '',
+      errors: 0,
       newMajor: {
         fullName: '',
         shortName: '',
@@ -120,7 +130,7 @@ export default {
 
       this.facultyId = this.$route.params.facultyId;
 
-      this.$store.state.majors.getData(token, 1, 10, { facultyId }).then(result => {
+      this.$store.state.majors.getData(token, 1, 10, { facultyId: this.facultyId }).then(result => {
         if (result === true) {
           this.majors = this.$store.state.majors.data;
           this.majors = this.majors.slice().sort((a, b) => b.shortName - a.shortName);
@@ -147,7 +157,7 @@ export default {
 
       this.$store.state.majors.delete(token, majorId).then(result => {
         if (result === true) {
-          this.majors = this.majors.filter(u => u.id != majorId);
+          this.majors = this.majors.filter(u => u.id !== majorId);
           this.majors = this.majors.slice().sort((a, b) => b.shortName - a.shortName);
         } else {
           this.$router.push({ name: 'notFoundPage' });
@@ -157,7 +167,22 @@ export default {
     addMajor() {
       $('#modalCreate').modal('show');
     },
+    checkErrors() {
+      this.errors |= (this.newMajor.fullName === '') ? 1 : this.errors;
+      this.errors |= (this.newMajor.shortName === '') ? (1 << 1) : this.errors;
+      this.errors |= (this.newMajor.duration === '') ? (1 << 2) : this.errors;
+
+      setTimeout(() => {
+        this.errors = 0;
+      }, 3000);
+
+      return this.errors > 0;
+    },
     saveMajor() {
+      if (this.checkErrors()) return;
+
+      $('#modalCreate').modal('hide');
+
       this.$store.state.profile.loadMinData();
       let token = this.$store.state.profile.data.token;
 

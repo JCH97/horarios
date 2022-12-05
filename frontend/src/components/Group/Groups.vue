@@ -34,7 +34,11 @@
               </button>
               <router-link v-for="group in filterList(groups, text, 'fullName')" :key='group.fullName'
                            :to="{name: 'groupPage', params: {groupId: group.id}}"
-                           class='list-group-item list-group-item-action'>{{ group.fullName }} ({{ group.fullName }})
+                           class='list-group-item list-group-item-action'>
+                <span :style='{color: group.color}'>
+                {{ group.fullName }} ({{ group.fullName }})
+                </span>
+
                 <div class='form-inline justify-content-end'>
                   <i class='fas fa-trash' @click.prevent='removeGroup(group.id)'></i>
                 </div>
@@ -59,26 +63,45 @@
           <div class='modal-body'>
             <form>
               <div class='row'>
+
                 <div class='col-md-6'>
                   <div class='form-group'>
                     <label for='input-fullName' class='col-form-label'>Nombre completo:</label>
-                    <input type='text' class='form-control' id='input-fullName' v-model='newGroup.fullName'>
+                    <input type='text'
+                           :class="{'form-control': true, 'border-danger': errors & 1}"
+                           id='input-fullName'
+                           v-model='newGroup.fullName'>
                   </div>
                   <div class='form-group'>
                     <label for='input-shortName' class='col-form-label'>Nombre:</label>
-                    <input type='text' class='form-control' id='input-shortName' v-model='newGroup.shortName'>
+                    <input type='text'
+                           :class="{'form-control': true, 'border-danger': errors & (1 << 1)}"
+                           id='input-shortName'
+                           v-model='newGroup.shortName'>
                   </div>
                   <div class='form-group'>
                     <label for='input-priority' class='col-form-label'>Prioridad:</label>
                     <input type='number' class='form-control' id='input-priority' v-model='newGroup.priority' />
                   </div>
                 </div>
+
+
                 <div class='col-md-6'>
                   <div class='form-group'>
                     <label for='input-description' class='col-form-label'>Year:</label>
-                    <input class='form-control' id='input-description' v-model='newGroup.year'>
+                    <input
+                      :class="{'form-control': true, 'border-danger': errors & (1 << 2)}"
+                      id='input-description'
+                      v-model='newGroup.year'>
                   </div>
+
+                  <div class='form-group'>
+                    <label for='input-color' class='col-form-label'>Color:</label>
+                    <input type='color' class='form-control' id='input-color' v-model='newGroup.color'>
+                  </div>
+
                 </div>
+
               </div>
 
               <div class='form-group'>
@@ -90,7 +113,7 @@
           </div>
           <div class='modal-footer'>
             <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancelar</button>
-            <button type='button' class='btn btn-primary' data-dismiss='modal' @click='saveGroup()'>
+            <button type='button' class='btn btn-primary' @click='saveGroup()'>
               Guardar
             </button>
           </div>
@@ -110,6 +133,7 @@ export default {
       text: '',
       val: 1,
       major: {},
+      errors: 0,
       newGroup: {
         fullName: '',
         shortName: '',
@@ -117,6 +141,7 @@ export default {
         description: '',
         year: '',
         majorId: {},
+        color: '',
       },
     };
   },
@@ -125,7 +150,9 @@ export default {
       this.$store.state.profile.loadMinData();
       let token = this.$store.state.profile.data.token;
 
-      this.$store.state.groups.getData(token)
+      this.$store.state.groups.getData(token, {
+        majorId: this.major.id
+      })
         .then(result => {
           if (result === true) {
             this.groups = this.$store.state.groups.data;
@@ -160,6 +187,7 @@ export default {
 
       this.$store.state.groups.delete(token, groupId).then(result => {
         if (result === true) {
+          this.groups = this.groups.filter(x => x.id !== groupId);
           this.groups = this.groups.slice().sort((a, b) => b.shortName - a.shortName);
         } else {
           this.$router.push({ name: 'notFoundPage' });
@@ -169,7 +197,22 @@ export default {
     addGroup() {
       $('#modalCreate').modal('show');
     },
+    checkErrors() {
+      this.errors |= (this.newGroup.fullName === '') ? 1 : this.errors;
+      this.errors |= (this.newGroup.shortName === '') ? (1 << 1) : this.errors;
+      this.errors |= (this.newGroup.year === '') ? (1 << 2) : this.errors;
+
+      setTimeout(() => {
+        this.errors = 0;
+      }, 3000);
+
+      return this.errors > 0;
+    },
     saveGroup() {
+      if (this.checkErrors()) return;
+
+      $('#modalCreate').modal('hide');
+
       this.$store.state.profile.loadMinData();
       let token = this.$store.state.profile.data.token;
 

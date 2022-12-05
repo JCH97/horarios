@@ -44,7 +44,7 @@
                 </div>
                 <div v-if='error.showError' class='form-group'>
                   <div class='card bg-danger text-white small animated--grow-in'>
-                    <div class='card-body'>{{error.message}}</div>
+                    <div class='card-body'>{{ error.message }}</div>
                   </div>
                 </div>
                 <a class='btn btn-primary btn-user btn-block text-white' @click='register'>
@@ -66,7 +66,7 @@
         <footer class='sticky-footer'>
           <div class='container'>
             <div class='copyright text-center text-dark'>
-              <strong>Facultad de Matemática y Computación de la Universidad de La Habana &copy; 2019</strong>
+              <strong>Facultad de Matemática y Computación de la Universidad de La Habana &copy; 2022</strong>
             </div>
           </div>
         </footer>
@@ -121,7 +121,7 @@ export default {
               this.$router.push({ name: 'loginPage' });
             } else {
               console.log(result.error + ':' + result.message);
-              this.error.message = result.message;
+              this.error.message = result.error + ':' + result.message;
               this.error.showError = true;
               setTimeout(() => {
                 this.error.showError = false;

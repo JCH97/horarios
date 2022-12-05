@@ -6,4 +6,5 @@ export type ClassUpdateDto = Omit<Partial<ClassDto>, 'id'> & {
   localId?: { id: string };
   lessonId?: { id: string };
   typeClassId?: { id: string };
+  groupId?: { id: string };
 };

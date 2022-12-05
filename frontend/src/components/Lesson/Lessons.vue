@@ -29,13 +29,13 @@
         <div class='card'>
           <div class='card-body p-0'>
             <div class='list-lesson'>
-              <button v-if="filterList(lessons, text, 'id').length === 0" type='button'
+              <button v-if="filterList(lessons, text, 'fullName').length === 0" type='button'
                       class='list-group-item list-group-item-action' disabled>No hay resultados para mostrar
               </button>
-              <router-link v-for="lesson in filterList(lessons, text, 'id')" :key='lesson.id'
+              <router-link v-for="lesson in filterList(lessons, text, 'fullName')" :key='lesson.id'
                            :to="{name: 'lessonPage', params: {lessonId: lesson.id}}"
-                           class='list-lesson-item list-lesson-item-action'>
-                {{ lesson.fullName }}
+                           class='list-group-item list-group-item-action'>
+                {{ lesson.fullName }} (Año: {{ lesson.year }})
                 <div class='form-inline justify-content-end'>
                   <i class='fas fa-trash' @click.prevent='removeLesson(lesson.id)'></i>
                 </div>
@@ -60,84 +60,85 @@
           <div class='modal-body'>
             <form>
               <div class='row'>
+
                 <div class='col-md-6'>
+
                   <div class='form-lesson'>
                     <label for='input-fullName' class='col-form-label'>Nombre completo:</label>
-                    <input type='text' class='form-control' id='input-fullName' v-model='newLesson.fullName'>
+                    <input type='text'
+                           id='input-fullName'
+                           :class="{'form-control': true, 'border-danger': errors & 1}"
+                           v-model='newLesson.fullName'>
                   </div>
+
                   <div class='form-lesson'>
-                    <label for='input-shortName' class='col-form-label'>Nombre:</label>
-                    <input type='text' class='form-control' id='input-shortName' v-model='newLesson.shortName'>
+                    <label for='input-shortName' class='col-form-label'>Nombre reducido:</label>
+                    <input type='text'
+                           :class="{'form-control': true, 'border-danger': errors & (1 << 1)}"
+                           id='input-shortName'
+                           v-model='newLesson.shortName'>
                   </div>
+
+                </div>
+
+                <div class='col-md-6'>
+                  <div class='form-lesson'>
+                    <label for='input-description' class='col-form-label'>Año:</label>
+                    <input
+                      :class="{'form-control': true, 'border-danger': errors & (1 << 2)}"
+                      id='input-description'
+                      v-model='newLesson.year'>
+                  </div>
+
+
                   <div class='form-lesson'>
                     <label for='input-priority' class='col-form-label'>Prioridad:</label>
                     <input type='number' class='form-control' id='input-priority' v-model='newLesson.priority' />
                   </div>
-                </div>
-                <div class='col-md-6'>
-                  <div class='form-lesson'>
-                    <label for='input-description' class='col-form-label'>Year:</label>
-                    <input class='form-control' id='input-description' v-model='newLesson.year'>
-                  </div>
 
-                  <div class='form-lesson'>
-                    <label for='input-description' class='col-form-label'>Descripcion:</label>
-                    <textarea class='form-control' id='input-description' v-model='newLesson.description'></textarea>
-                  </div>
                 </div>
 
-                <div style='margin-left: 5px; margin-top: 10px' class='form-group dropdown mb-0'>
-                  <button
-                    class='btn btn-light dropdown-toggle'
-                    type='button' id='teacher_drop_down'
-                    data-toggle='dropdown'
-                    aria-haspopup='true' aria-expanded='true'>
-                    {{ selectedShortNameTeacher != '' ? selectedShortNameTeacher : 'Elegir profesor' }}
-                  </button>
-                  <div class='dropdown-menu'>
-                    <a style='cursor:pointer;' v-for='u in this.teachers' :key='u.id' class='dropdown-item'
-                       @click='selectedShortNameTeacher = u.shortName'>{{ u.fullName }}</a>
-                  </div>
-                </div>
+              </div>
 
+              <div class='row py-3 mx-0'>
+                <div>
+                  <div style='margin-left: 5px; margin-top: 10px' class='form-group dropdown mb-0'>
+                    <button :style='[selectedSemester.id ? {"color": "green"} : {}]'
+                            :class="{'btn': true, 'btn-light': true, 'dropdown-toggle': true, 'border-danger': errors & (1 << 4)}"
+                            type='button' id='teacher_drop_down'
+                            data-toggle='dropdown'
+                            aria-haspopup='true' aria-expanded='true'>
+                      {{ !selectedSemester.shortName ? 'Elegir Semestre' : selectedSemester.shortName }}
+                    </button>
 
-                <div style='margin-left: 5px; margin-top: 10px' class='form-group dropdown mb-0'>
-                  <button
-                    class='btn btn-light dropdown-toggle'
-                    type='button' id='teacher_drop_down'
-                    data-toggle='dropdown'
-                    aria-haspopup='true' aria-expanded='true'>
-                    {{ selectedShortNameLocal != '' ? selectedShortNameLocal : 'Elegir local' }}
-                  </button>
-                  <div class='dropdown-menu'>
-                    <a style='cursor:pointer;' v-for='u in this.locals' :key='u.id' class='dropdown-item'
-                       @click.prevent='selectedShortNameLocal = u.shortName'>{{ u.fullName }}</a>
-                  </div>
-                </div>
-
-
-                <div style='margin-left: 5px; margin-top: 10px' class='form-group dropdown mb-0'>
-                  <button :style='[selectedIdTeacher != "" ? {"color": "green"} : {"color": "red"}]'
-                          class='btn btn-light dropdown-toggle'
-                          type='button' id='teacher_drop_down'
-                          data-toggle='dropdown'
-                          aria-haspopup='true' aria-expanded='true'>
-                    Elegir Semestre
-                  </button>
-
-                  <div class='dropdown-menu animated--fade-in ' aria-labelledby='dropdownMenuButton'
-                       x-placement='bottom-start'
-                       style='position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 38px, 0px);'>
-                    <div class='input-group m-2 ' v-for='it in semesters' :key='it.id'>
-                      <div class='input-group-text bg-white'>
-                        <input type='checkbox' aria-label='Checkbox for following text input' v-model='it.isMarked'>
-                        <span class='ml-2' id='basi7-addon3'>{{ it.shortName }}</span>
+                    <div class='dropdown-menu animated--fade-in ' aria-labelledby='dropdownMenuButton'
+                         x-placement='bottom-start'
+                         style='position: absolute; will-change: transform; top: 0px; left: 0px; transform: translate3d(0px, 38px, 0px);'>
+                      <div class='input-group m-2 ' v-for='it in this.semesters' :key='it.id'>
+                        <div class='input-group-text bg-white'>
+                          <input type='checkbox' aria-label='Checkbox for following text input' v-model='it.selected'>
+                          <span class='ml-2' id='basic7-addon3'>{{ it.shortName }}</span>
+                        </div>
                       </div>
                     </div>
+
                   </div>
 
                 </div>
 
+              </div>
+
+              <div>
+                <label :class="{'border-danger': errors & (1 << 3)}"> Elegir Profesor</label>
+                <div :class="{'border-danger': errors & (1 << 3)}">
+                  <infinite-scroll ref='infiniteScrollTeachers' :values='this.teachers'
+                                   v-model='selectedTeacher'></infinite-scroll>
+                </div>
+              </div>
+
+              <div class='form-lesson'>
+                <label for='input-description' class='col-form-label'>Descripcion:</label>
+                <textarea class='form-control' id='input-description' v-model='newLesson.description'></textarea>
               </div>
 
             </form>
@@ -145,7 +146,7 @@
 
           <div class='modal-footer'>
             <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancelar</button>
-            <button type='button' class='btn btn-primary' data-dismiss='modal' @click='saveLesson()'>
+            <button type='button' class='btn btn-primary' @click='saveLesson()'>
               Guardar
             </button>
           </div>
@@ -157,8 +158,11 @@
 </template>
 
 <script>
+import InfiniteScroll from '@/components/InfiniteScroll';
+
 export default {
   name: 'Lessons',
+  components: { InfiniteScroll },
   data() {
     return {
       lessons: [],
@@ -167,6 +171,7 @@ export default {
       semesters: [],
       text: '',
       val: 1,
+      errors: 0,
       major: {},
       newLesson: {
         fullName: '',
@@ -176,12 +181,13 @@ export default {
         duration: '',
         majorId: {},
         teacherId: {},
-        semesterId: {},
+        semesterIds: [],
         localId: {},
+        year: '',
       },
-      selectedShortNameTeacher: '',
-      selectedShortNameLocal: '',
-      selectedShortNameSemester: '',
+      selectedTeacher: '',
+      selectedLocal: {},
+      selectedSemester: {},
     };
   },
   methods: {
@@ -189,7 +195,9 @@ export default {
       this.$store.state.profile.loadMinData();
       let token = this.$store.state.profile.data.token;
 
-      this.$store.state.lessons.getData(token)
+      this.$store.state.lessons.getAll(token, {
+        majorId: this.major.id,
+      })
         .then(result => {
           if (result === true) {
             this.lessons = this.$store.state.lessons.data;
@@ -204,7 +212,19 @@ export default {
           }
         });
 
-      // this.$store.state.teachers.getAll(token, {});
+      this.$store.state.teachers.getAll(token, {})
+        .then(result => {
+          if (result === true) {
+            this.teachers = this.$store.state.teachers.data;
+          }
+        });
+
+      this.$store.state.semesters.getAll(token, {})
+        .then(result => {
+          if (result === true) {
+            this.semesters = this.$store.state.semesters.data;
+          }
+        });
 
 
     },
@@ -226,7 +246,8 @@ export default {
 
       this.$store.state.lessons.delete(token, lessonId).then(result => {
         if (result === true) {
-          this.lessons = this.lessons.slice().sort((a, b) => b.shortName - a.shortName);
+          this.lessons = this.lessons.filter(x => x.id !== lessonId);
+          this.lessons = this.lessons.slice().sort((a, b) => b.fullName - a.fullName);
         } else {
           this.$router.push({ name: 'notFoundPage' });
         }
@@ -235,20 +256,71 @@ export default {
     addLesson() {
       $('#modalCreate').modal('show');
     },
+    checkErrors() {
+      this.errors |= (this.newLesson.fullName === '') ? 1 : this.errors;
+      this.errors |= (this.newLesson.shortName === '') ? (1 << 1) : this.errors;
+      this.errors |= (this.newLesson.year === '') ? (1 << 2) : this.errors;
+      this.errors |= (this.selectedTeacher === '') ? (1 << 3) : this.errors;
+      this.errors |= (!this.semesters.some(x => x.selected === true)) ? (1 << 4) : this.errors;
+
+      setTimeout(() => {
+        this.errors = 0;
+      }, 3000);
+
+      return this.errors > 0;
+    },
     saveLesson() {
+      if (this.checkErrors()) return;
+
+      $('#modalCreate').modal('hide');
+
       this.$store.state.profile.loadMinData();
       let token = this.$store.state.profile.data.token;
 
+      this.newLesson.fullName += ` ${this.major.shortName}`;
+      this.newLesson.shortName += ` ${this.major.shortName}`;
+
       this.newLesson.majorId = { id: this.major.id };
+      this.newLesson.teacherId = { id: this.selectedTeacher };
+      this.newLesson.semesterIds = [];
+      this.newLesson.priority = !this.newLesson.priority ? 1 : this.newLesson.priority;
+
+      this.semesters.forEach(s => {
+        if (s.selected)
+          this.newLesson.semesterIds.push({ id: s.id });
+      });
 
       this.$store.state.lessons.create(token, this.newLesson).then(result => {
         if (result === true) {
           this.lessons.push(this.$store.state.lessons.data);
-          this.lessons = this.lessons.slice().sort((a, b) => b.shortName - a.shortName);
+          this.lessons = this.lessons.slice().sort((a, b) => b.year - a.year);
+
+          this.restart();
+          this.$refs.infiniteScrollTeachers.clear();
+
         } else {
           this.$router.push({ name: 'notFoundPage' });
         }
       });
+    },
+    restart() {
+      this.newLesson = {
+        fullName: '',
+        shortName: '',
+        priority: '',
+        description: '',
+        duration: '',
+        majorId: {},
+        teacherId: {},
+        semesterIds: [],
+        localId: {},
+        year: '',
+      };
+
+      this.selectedSemester = {};
+      this.selectedLocal = {};
+      this.selectedTeacher = '';
+
     },
     comparer(prop, val) {
       return function(a, b) {
@@ -260,14 +332,6 @@ export default {
           return 0;
         }
       };
-    },
-    chooseTeacher(id) {
-      const teacher = this.teachers.find(x => x.Id === id);
-      this.btnTeacherText = teacher.fullName;
-    },
-    chooseLocal(id) {
-      const local = this.locals.find(x => x.Id === id);
-      this.btnLocalText = local.fullName;
     },
   },
   created() {

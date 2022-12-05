@@ -40,7 +40,7 @@ export class Semester extends DomainEntity<SemesterProps> {
   }
 
   get priority(): number {
-    return this.props.priority;
+    return this.props.priority ?? 1;
   }
 
   get createdAt(): Date {
@@ -52,6 +52,9 @@ export class Semester extends DomainEntity<SemesterProps> {
   }
 
   public static New(props: newSemesterProps): Result<Semester> {
+    props.start.setDate(props.start.getDate() + 1);
+    props.end.setDate(props.end.getDate() + 1);
+
     const ans: Result<Semester> = this.Create({
       ...props,
       createdAt: new Date(),
@@ -64,7 +67,9 @@ export class Semester extends DomainEntity<SemesterProps> {
   }
 
   public static Create(props: SemesterProps, id: string = null): Result<Semester> {
-    // set guards here
+    props.start.setHours(0, 0, 0, 0);
+    props.end.setHours(0, 0, 0, 0);
+
     return Result.Ok(new Semester(props, new UniqueEntityID(id)));
   }
 
@@ -74,8 +79,11 @@ export class Semester extends DomainEntity<SemesterProps> {
     this.props.fullName = props.fullName ?? this.props.fullName;
     this.props.duration = props.duration ?? this.props.duration;
     this.props.shortName = props.shortName ?? this.props.shortName;
-    this.props.start = props.start ?? this.props.start;
-    this.props.end = props.end ?? this.props.end;
+    this.props.start = new Date(props.start) ?? this.props.start;
+    this.props.end = new Date(props.end) ?? this.props.end;
+
+    this.props.start.setHours(0, 0, 0, 0);
+    this.props.end.setHours(0, 0, 0, 0);
 
     this.props.updatedAt = new Date();
   }

@@ -30,10 +30,10 @@
         <div class='card'>
           <div class='card-body p-0'>
             <div class='list-group'>
-              <button v-if="filterList(faculties, text, 'id').length === 0" type='button'
+              <button v-if="filterList(faculties, text, 'fullName').length === 0" type='button'
                       class='list-group-item list-group-item-action' disabled>No hay resultados para mostrar
               </button>
-              <router-link v-for="fac in filterList(faculties, text, 'id')" :key='fac.id'
+              <router-link v-for="fac in filterList(faculties, text, 'fullName')" :key='fac.id'
                            :to="{name: 'facultyPage', params: {facultyId: fac.id}}"
                            class='list-group-item list-group-item-action'>{{ fac.fullName }} ({{ fac.shortName }})
                 <div class='form-inline justify-content-end'>
@@ -61,11 +61,18 @@
             <form>
               <div class='form-group'>
                 <label for='input-fullName' class='col-form-label'>Nombre completo:</label>
-                <input type='text' class='form-control' id='input-fullName' v-model='newFaculty.fullName'>
+                <input type='text'
+                       :class="{'form-control': true, 'border-danger': errors & 1}"
+                       id='input-fullName'
+                       v-model='newFaculty.fullName'>
               </div>
               <div class='form-group'>
                 <label for='input-shortName' class='col-form-label'>Nombre:</label>
-                <input type='text' class='form-control' id='input-shortName' v-model='newFaculty.shortName'>
+                <input type='text'
+                       class='form-control'
+                       :class="{'form-control': true, 'border-danger': errors & (1 << 1)}"
+                       id='input-shortName'
+                       v-model='newFaculty.shortName'>
               </div>
               <div class='form-group'>
                 <label for='input-priority' class='col-form-label'>Prioridad:</label>
@@ -79,7 +86,7 @@
           </div>
           <div class='modal-footer'>
             <button type='button' class='btn btn-secondary' data-dismiss='modal'>Cancelar</button>
-            <button type='button' class='btn btn-primary' data-dismiss='modal' @click='saveFaculty()'>
+            <button type='button' class='btn btn-primary' @click='saveFaculty()'>
               Guardar
             </button>
           </div>
@@ -110,6 +117,7 @@ export default {
         description: '',
         universityId: '',
       },
+      errors: 0,
     };
   },
   methods: {
@@ -162,7 +170,21 @@ export default {
     addFaculty() {
       $('#modalCreate').modal('show');
     },
+    checkErrors() {
+      this.errors |= (this.newFaculty.fullName === '') ? 1 : this.errors;
+      this.errors |= (this.newFaculty.shortName === '') ? (1 << 1) : this.errors;
+
+      setTimeout(() => {
+        this.errors = 0;
+      }, 3000);
+
+      return this.errors > 0;
+    },
     saveFaculty() {
+      if (this.checkErrors()) return;
+
+      $('#modalCreate').modal('hide');
+
       this.$store.state.profile.loadMinData();
       let token = this.$store.state.profile.data.token;
 

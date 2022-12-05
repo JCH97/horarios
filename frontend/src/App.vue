@@ -5,8 +5,10 @@
 </template>
 
 <script>
+
 export default {
   name: 'app',
+  components: {},
   data() {
     return {};
   },
@@ -31,4 +33,5 @@ export default {
 <style>
 @import "assets/css/sb-admin-2.min.css";
 @import "assets/vendor/fontawesome-free/css/all.min.css";
+@import '~vue-select/dist/vue-select.css';
 </style>

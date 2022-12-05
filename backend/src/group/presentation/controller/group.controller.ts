@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response, UseGuards } from '@nestjs/common';
 import {
   CreateGroupUseCase,
+  FindAllGroupUseCase,
   FindByIdGroupUseCase,
   FindDetailsGroupUseCase,
   PaginatedGroupUseCase,
@@ -13,6 +14,10 @@ import { GroupPaginatedDto } from '../../application/dtos/group.paginated.dto';
 import { GroupUpdateDto } from '../../application/dtos/group.update.dto';
 import { GroupCreateDto } from '../../application/dtos/group.create.dto';
 import { GroupMappers } from '../../infra/mappers/group.mapper';
+import { GroupFindAllDto } from '../../application/dtos/group.find-all.dto';
+import { JwtAuthGuard } from '../../../auth/application/guards/jwtAuthGuard';
+import { PermissionsDecorator } from '../../../auth/application/decorator/permission.decorator';
+import { UserPermissions } from '../../../user/domain/enums/user.permissions';
 
 @Controller('group')
 export class GroupController {
@@ -25,7 +30,8 @@ export class GroupController {
     private readonly updateGroup: UpdateGroupUseCase,
     private readonly removeGroup: RemoveGroupUseCase,
     private readonly paginatedGroup: PaginatedGroupUseCase,
-    private readonly findDetailsGroup: FindDetailsGroupUseCase) {
+    private readonly findDetailsGroup: FindDetailsGroupUseCase,
+    private readonly findAllGroups: FindAllGroupUseCase) {
 
     this._logger = new Logger('GroupController');
   }
@@ -55,7 +61,16 @@ export class GroupController {
     return ProcessResponse.setResponse(res, pag, GroupMappers.PaginatedToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @Post('all')
+  async getAll(@Body() body: GroupFindAllDto, @Response() res) {
+    this._logger.log('Get All');
+
+    const ans = await this.findAllGroups.execute(body);
+    return ProcessResponse.setResponse(res, ans, GroupMappers.AllToDto);
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_GROUP)
   @Post('create')
   async create(@Body() body: GroupCreateDto, @Response() res) {
 
@@ -65,7 +80,8 @@ export class GroupController {
     return ProcessResponse.setResponse<Group>(res, group, GroupMappers.DomainToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_GROUP)
   @Put()
   async update(@Body() body: GroupUpdateDto, @Response() res) {
     this._logger.log('Update');
@@ -74,7 +90,8 @@ export class GroupController {
     return ProcessResponse.setResponse<Group>(res, group, GroupMappers.DomainToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_GROUP)
   @Delete()
   async delete(@Body() body: { id: string }, @Response() res) {
     this._logger.log('Delete');

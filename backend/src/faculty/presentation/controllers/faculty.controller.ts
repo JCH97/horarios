@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response, UseGuards } from '@nestjs/common';
 import {
   CreateFacultyUseCase,
   FindAllFacultyUseCase,
@@ -15,6 +15,9 @@ import { FacultyUpdateDto } from '../../application/dtos/faculty.update.dto';
 import { FacultyCreateDto } from '../../application/dtos/faculty.create.dto';
 import { FacultyMappers } from '../../infra/mappers/faculty.mappers';
 import { FacultyFindAllDto } from '../../application/dtos/faculty.find-all.dto';
+import { JwtAuthGuard } from '../../../auth/application/guards/jwtAuthGuard';
+import { UserPermissions } from 'src/user/domain/enums/user.permissions';
+import { PermissionsDecorator } from '../../../auth/application/decorator/permission.decorator';
 
 @Controller('faculty')
 export class FacultyController {
@@ -68,7 +71,8 @@ export class FacultyController {
     return ProcessResponse.setResponse(res, ans, FacultyMappers.AllToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_FACULTY)
   @Post('create')
   async create(@Body() body: FacultyCreateDto, @Response() res) {
 
@@ -78,7 +82,8 @@ export class FacultyController {
     return ProcessResponse.setResponse<Faculty>(res, university, FacultyMappers.DomainToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_FACULTY)
   @Put()
   async update(@Body() body: FacultyUpdateDto, @Response() res) {
     this._logger.log('Update');
@@ -87,7 +92,8 @@ export class FacultyController {
     return ProcessResponse.setResponse<Faculty>(res, university, FacultyMappers.DomainToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_FACULTY)
   @Delete()
   async delete(@Body() body: { id: string }, @Response() res) {
     this._logger.log('Delete');
@@ -95,6 +101,4 @@ export class FacultyController {
     const university = await this.removeFaculty.execute(body);
     return ProcessResponse.setResponse<Faculty>(res, university, FacultyMappers.DomainToDto);
   }
-
-
 }

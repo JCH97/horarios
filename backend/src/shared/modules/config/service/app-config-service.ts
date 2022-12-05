@@ -44,6 +44,7 @@ export class AppConfigService {
       'database.synchronize',
       false,
     ),
+    logging: this._configService.get<boolean>('database.logger') ?? undefined
   };
 
   smtp: ISMTPConfig = {

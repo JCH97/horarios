@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response, UseGuards } from '@nestjs/common';
 import {
   CreateUniversityUseCase,
   FindAllUniversityUseCase,
@@ -14,6 +14,9 @@ import { UniversityUpdateDto } from '../../application/dtos/university.update.dt
 import { PaginatedUniversityUseCase } from '../../application/useCases/university.paginated.use-case';
 import { UniversityPaginatedDto } from '../../application/dtos/university.paginated.dto';
 import { UniversityFindAllDto } from '../../application/dtos/university.find-all.dto';
+import { JwtAuthGuard } from '../../../auth/application/guards/jwtAuthGuard';
+import { PermissionsDecorator } from '../../../auth/application/decorator/permission.decorator';
+import { UserPermissions } from '../../../user/domain/enums/user.permissions';
 
 @Controller('university')
 export class UniversityController {
@@ -55,7 +58,8 @@ export class UniversityController {
     return ProcessResponse.setResponse(res, pag, UniversityMapper.PaginatedToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_UNIVERSITY)
   @Post('create')
   async create(@Body() body: UniversityCreateDto, @Response() res) {
 
@@ -65,7 +69,8 @@ export class UniversityController {
     return ProcessResponse.setResponse<University>(res, university, UniversityMapper.DomainToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_UNIVERSITY)
   @Put()
   async update(@Body() body: UniversityUpdateDto, @Response() res) {
     this._logger.log('Update');
@@ -74,7 +79,8 @@ export class UniversityController {
     return ProcessResponse.setResponse<University>(res, university, UniversityMapper.DomainToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_UNIVERSITY)
   @Delete()
   async delete(@Body() body: { id: string }, @Response() res) {
     this._logger.log('Delete');

@@ -26,7 +26,7 @@ export class TeachYear extends DomainEntity<TeachYearProps> {
   }
 
   get priority(): number {
-    return this.props.priority;
+    return this.props.priority ?? 1;
   }
 
   get createdAt(): Date {

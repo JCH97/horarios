@@ -1,0 +1,8 @@
+enum SetOperators {
+  // UNION = 'UNION',
+  // INTERSECTION = 'INTERSECTION',
+  // DIFFERENCE = 'DIFFERENCE',
+  SUBSET = 'SUBSET',
+  EQUAL = 'EQUAL',
+  NOT_EQUAL = 'NOT_EQUAL',
+};

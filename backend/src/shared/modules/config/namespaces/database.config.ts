@@ -9,7 +9,7 @@ export const databaseConfig = registerAs('database', () => ({
   host: process.env.DATABASE_HOST,
   database: process.env.DATABASE_NAME,
   synchronize: process.env.DATABASE_SYNC === 'true',
-  logger: process.env.DATABASE_LOGGER,
+  logger: process.env.DATABASE_LOGGER === 'true',
 }));
 
 export const databaseSchema = {

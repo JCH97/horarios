@@ -3,7 +3,7 @@ import { DataAccessModule } from '../shared/modules/data-access/data-access.modu
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { LessonPersistence } from '../lesson/infra/entities/lesson.persistence';
 import { FacultyModule } from '../faculty/faculty.module';
-import { LessonUseCases } from '../lesson/application/useCases';
+import { FindAllLessonUseCase, FindByIdLessonUseCase, LessonUseCases } from '../lesson/application/useCases';
 import { LessonRepository } from '../lesson/infra/repositories/lesson.repository';
 import { LessonController } from '../lesson/presentation/controllers/lesson.controller';
 
@@ -14,7 +14,7 @@ import { LessonController } from '../lesson/presentation/controllers/lesson.cont
     FacultyModule,
   ],
   providers: [...LessonUseCases, LessonRepository],
-  exports: [],
+  exports: [FindAllLessonUseCase, FindByIdLessonUseCase],
   controllers: [LessonController],
 })
 export class LessonModule {

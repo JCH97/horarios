@@ -1,4 +1,4 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response, UseGuards } from '@nestjs/common';
 import {
   CreateMajorUseCase, FindAllMajorUseCase,
   FindByIdMajorUseCase, FindDetailsMajorUseCase,
@@ -16,6 +16,9 @@ import { FacultyFindAllDto } from '../../../faculty/application/dtos/faculty.fin
 import { FacultyMappers } from '../../../faculty/infra/mappers/faculty.mappers';
 import { Teacher } from '../../../teacher/domain/entities/teacher.entity';
 import { TeacherMappers } from '../../../teacher/infra/mappers/teacher.mappers';
+import { JwtAuthGuard } from '../../../auth/application/guards/jwtAuthGuard';
+import { UserPermissions } from '../../../user/domain/enums/user.permissions';
+import { PermissionsDecorator } from '../../../auth/application/decorator/permission.decorator';
 
 @Controller('major')
 export class MajorController {
@@ -66,7 +69,8 @@ export class MajorController {
     return ProcessResponse.setResponse<Major>(res, major, MajorMappers.DomainToDetails);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_MAJOR)
   @Post('create')
   async create(@Body() body: MajorCreateDto, @Response() res) {
     this._logger.log('Create');
@@ -75,7 +79,8 @@ export class MajorController {
     return ProcessResponse.setResponse<Major>(res, major, MajorMappers.DomainToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_MAJOR)
   @Put()
   async update(@Body() body: MajorUpdateDto, @Response() res) {
     this._logger.log('Update');
@@ -84,7 +89,8 @@ export class MajorController {
     return ProcessResponse.setResponse<Major>(res, major, MajorMappers.DomainToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_MAJOR)
   @Delete()
   async delete(@Body() body: { id: string }, @Response() res) {
     this._logger.log('Delete');
@@ -92,6 +98,4 @@ export class MajorController {
     const major = await this.removeMajorUseCase.execute(body);
     return ProcessResponse.setResponse<Major>(res, major, MajorMappers.DomainToDto);
   }
-
-
 }

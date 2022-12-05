@@ -22,12 +22,15 @@ export class LessonMappers {
           teacher:
             persist.teacher ? TeacherMappers.PersistToDomain(persist.teacher) : null,
           teacherId: { id: persist.teacherId },
-          semesterIds: persist.semesters.map(s => {
-            return {
-              id: s.id,
-            };
-          }),
+          semesterIds: persist.semesters
+            ? persist.semesters.map(s => {
+              return {
+                id: s.id,
+              };
+            })
+            : [],
           semesters: persist.semesters ? persist.semesters.map(s => SemesterMapper.PersistToDomain(s)) : [],
+          year: persist.year,
         },
         persist.id)
     ;
@@ -48,7 +51,7 @@ export class LessonMappers {
       priority: domain.priority,
       createdAt: domain.createdAt,
       updatedAt: domain.updatedAt,
-      duration: domain.duration,
+      // duration: domain.duration,
       major: domain.majorId,
       local: domain.localId,
       teacher: domain.teacherId,
@@ -67,9 +70,10 @@ export class LessonMappers {
       teacherId: domain.teacherId,
       localId: domain.localId,
       majorId: domain.majorId,
+      semesterIds: domain.semesterIds,
       createdAt: domain.createdAt,
       updatedAt: domain.updatedAt,
-      duration: domain.duration,
+      // duration: domain.duration,
       year: domain.year,
     };
   }

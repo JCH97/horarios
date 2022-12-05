@@ -6,7 +6,8 @@ export type WeekDto = BaseDto & {
   description: string;
   priority: number;
   duration: number;
-  firstDay?: string;
-  endDay?: string;
-  number?: number;
+  firstDate?: Date;
+  endDate?: Date;
+  semesterId?: { id: string };
+  number: number;
 }

@@ -1,12 +1,11 @@
 <template>
-  <div id='group'>
+  <div id='lesson'>
     <div class='row'>
       <div class='col-12'>
         <div class='card mb-4 w-100 border-bottom-primary'>
           <div class='card-header py-3 bg-white'>
-            <h5 class='m-0 font-weight-bold text-primary'>Group: {{ group.fullName }}</h5>
-            <!--            <h5 class='m-0 font-weight-bold text-primary'>Universidad: {{ this.universityName }}</h5>-->
-            <!--            <h5 class='m-0 font-weight-bold text-primary'>Facultad: {{ this.facultyName }}</h5>-->
+            <h5 class='m-0 font-weight-bold text-primary'>Asignatura: {{ lesson.fullName }} / {{ lesson.major.fullName
+              }}</h5>
 
             <div class='form-inline justify-content-end'>
               <button class='btn sm-2'>
@@ -24,7 +23,7 @@
           <div class='card text-center'>
             <div class='card-body'>
               <h5 class='card-title text-black-50'><strong> Nombre Completo </strong></h5>
-              <p class='card-text'>{{ group.fullName }}</p>
+              <p class='card-text'>{{ lesson.fullName }}</p>
             </div>
           </div>
         </div>
@@ -33,7 +32,7 @@
           <div class='card text-center'>
             <div class='card-body'>
               <h5 class='card-title text-black-50'><strong> Nombre Reducido </strong></h5>
-              <p class='card-text'>{{ group.shortName }}</p>
+              <p class='card-text'>{{ lesson.shortName }}</p>
             </div>
           </div>
         </div>
@@ -44,7 +43,7 @@
           <div class='card text-center'>
             <div class='card-body'>
               <h5 class='card-title text-black-50'><strong> Prioridad </strong></h5>
-              <p class='card-text'>{{ group.priority }}</p>
+              <p class='card-text'>{{ lesson.priority }}</p>
             </div>
           </div>
         </div>
@@ -53,21 +52,57 @@
           <div class='card text-center'>
             <div class='card-body'>
               <h5 class='card-title text-black-50'><strong> Descripcion </strong></h5>
-              <p class='card-text'>{{ group.description }}</p>
-            </div>
-          </div>
-        </div>
-
-        <div class='col-sm-6 py-4'>
-          <div class='card text-center'>
-            <div class='card-body'>
-              <h5 class='card-title text-black-50'><strong> Anno </strong></h5>
-              <p class='card-text'>{{ group.year }}</p>
+              <p class='card-text'>{{ lesson.description }}</p>
             </div>
           </div>
         </div>
 
       </div>
+
+
+      <div class='row py-4'>
+        <div class='col-sm-6'>
+          <div class='card text-center'>
+            <div class='card-body'>
+              <h5 class='card-title text-black-50'><strong> Year </strong></h5>
+              <p class='card-text'>{{ lesson.year }}</p>
+            </div>
+          </div>
+        </div>
+
+        <div class='col-sm-6'>
+          <div class='card text-center'>
+            <div class='card-body'>
+              <h5 class='card-title text-black-50'><strong> Duracion </strong></h5>
+              <p class='card-text'>{{ lesson.duration }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <div class='row py-4'>
+        <div class='col-sm-6'>
+          <div class='card text-center'>
+            <div class='card-body'>
+              <h5 class='card-title text-black-50'><strong> Profesor </strong></h5>
+              <p class='card-text'>
+                {{ this.selectedFromInfiniteScroll ? (teachers.find(x => x.id === this.selectedFromInfiniteScroll)).fullName : lesson.teacher.fullName
+                }}
+              </p>
+            </div>
+          </div>
+        </div>
+
+        <div class='col-sm-6'>
+          <div class='card text-center'>
+            <div class='card-body'>
+              <h5 class='card-title text-black-50'><strong> Semestres </strong></h5>
+              <p class='card-text'>{{ lesson.semesters.map(x => x.shortName).join(',') }}</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
 
     </div>
     <!--    Modal for Edit-->
@@ -77,7 +112,7 @@
       <div class='modal-dialog' role='document'>
         <div class='modal-content'>
           <div class='modal-header'>
-            <h5 class='modal-title' id='exampleModalLabel'>Editando {{ group.fullName }}</h5>
+            <h5 class='modal-title' id='exampleModalLabel'>Editando {{ lesson.fullName }}</h5>
             <button type='button' class='close' data-dismiss='modal' aria-label='Close'>
               <span aria-hidden='true'>&times;</span>
             </button>
@@ -90,29 +125,37 @@
                 <div class='col-md-6'>
                   <div class='form-group'>
                     <label for='input-fullName' class='col-form-label'>Nombre completo:</label>
-                    <input type='text' class='form-control' id='input-fullName' v-model='group.fullName'>
+                    <input type='text' class='form-control' id='input-fullName' v-model='lesson.fullName'>
                   </div>
                   <div class='form-group'>
                     <label for='input-shortName' class='col-form-label'>Nombre:</label>
-                    <input type='text' class='form-control' id='input-shortName' v-model='group.shortName'>
-                  </div>
-                  <div class='form-group'>
-                    <label for='input-priority' class='col-form-label'>Prioridad:</label>
-                    <input type='number' class='form-control' id='input-priority' v-model='group.priority' />
+                    <input type='text' class='form-control' id='input-shortName' v-model='lesson.shortName'>
                   </div>
                 </div>
                 <div class='col-md-6'>
                   <div class='form-group'>
+                    <label for='input-priority' class='col-form-label'>Prioridad:</label>
+                    <input type='number' class='form-control' id='input-priority' v-model='lesson.priority' />
+                  </div>
+                  <div class='form-group'>
                     <label for='input-year' class='col-form-label'>Anno:</label>
-                    <input type='number' max='5' min='1' class='form-control' id='input-year' v-model='group.year'>
+                    <input type='number' max='5' min='1' class='form-control' id='input-year' v-model='lesson.year'>
                   </div>
                 </div>
+              </div>
 
-                <div class='form-group'>
-                  <label for='input-description' class='col-form-label'>Descripcion:</label>
-                  <textarea class='form-control' id='input-description' v-model='group.description'></textarea>
+              <div>
+                <label> Elegir Profesor</label>
+                <div>
+                  <infinite-scroll :values='this.teachers' v-model='selectedFromInfiniteScroll'></infinite-scroll>
                 </div>
               </div>
+
+              <div class='form-group'>
+                <label for='input-description' class='col-form-label'>Descripcion:</label>
+                <textarea class='form-control' id='input-description' v-model='lesson.description'></textarea>
+              </div>
+
             </form>
           </div>
 
@@ -130,18 +173,33 @@
 </template>
 
 <script>
+import InfiniteScroll from '@/components/InfiniteScroll';
+
 export default {
-  name: 'Group',
+  name: 'Lesson',
+  components: {
+    InfiniteScroll,
+  },
   data() {
     return {
-      group: {
+      selectedFromInfiniteScroll: '',
+      teachers: [],
+      lesson: {
         id: '',
         fullName: '',
         shortName: '',
         description: '',
         priority: '',
-        major: {},
         year: '',
+        duration: '',
+        major: {},
+        local: {},
+        teacher: {},
+        semesters: [],
+        localId: {},
+        teacherId: {},
+        semesterIds: [],
+        majorId: {},
       },
     };
   },
@@ -151,13 +209,20 @@ export default {
       this.$store.state.profile.loadMinData();
       let token = this.$store.state.profile.data.token;
 
-      this.$store.state.group.getDetails(token, this.group.id).then(result => {
+      this.$store.state.lesson.getDetails(token, this.lesson.id).then(result => {
         if (result === true) {
-          this.group = this.$store.state.group.data;
+          this.lesson = this.$store.state.lesson.data;
         } else {
           this.$router.push({ name: 'notFoundPage' });
         }
       });
+
+      this.$store.state.teachers.getAll(token, {})
+        .then(result => {
+          if (result === true) {
+            this.teachers = this.$store.state.teachers.data;
+          }
+        });
     },
     filterList(list, box, prop, val) {
       let tmp = list.slice().sort(this.comparer(prop, val));
@@ -169,13 +234,16 @@ export default {
       $('#modalEdit').modal('show');
     },
     saveEdited() {
-
       this.$store.state.profile.loadMinData();
       let token = this.$store.state.profile.data.token;
-      this.$store.state.group.edit(token, { ...this.group, major: null })
+
+      if (this.selectedFromInfiniteScroll !== '')
+        this.lesson.teacherId = { id: this.selectedFromInfiniteScroll };
+
+      this.$store.state.lesson.edit(token, { ...this.lesson })
         .then(result => {
           if (result === true) {
-            this.group = this.$store.state.group.data;
+            this.lesson = this.$store.state.lesson.data;
           } else {
             this.$router.push({ name: 'notFoundPage' });
           }
@@ -208,8 +276,8 @@ export default {
     },
   },
   created() {
-    this.group.id = this.$route.params.groupId;
-    if (!this.group.id) {
+    this.lesson.id = this.$route.params.lessonId;
+    if (!this.lesson.id) {
       this.$router.push({ name: 'notFoundPage' });
     }
     this.loadData();

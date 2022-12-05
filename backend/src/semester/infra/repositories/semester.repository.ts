@@ -12,4 +12,14 @@ export class SemesterRepository extends BaseRepository<Semester, SemesterPersist
   constructor(@InjectRepository(SemesterPersistence) _repository: Repository<SemesterPersistence>) {
     super(_repository, SemesterMapper.DomainToPersist, SemesterMapper.PersistToDomain, 'SemesterRepository');
   }
+
+  async findDetails(id: string): Promise<Semester> {
+    const semester = await this
+      ._entityRepository
+      .findOne(id, {
+        relations: [],
+      });
+
+    return SemesterMapper.PersistToDomain(semester);
+  }
 }

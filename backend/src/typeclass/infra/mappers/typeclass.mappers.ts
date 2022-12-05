@@ -3,6 +3,7 @@ import { TypeClass } from '../../domain/entities/typeclass.entity';
 import { TypeclassDto } from '../../application/dtos/typeclass.dto';
 import { PaginatedFindResult } from '../../../shared/core/PaginatedFindResult';
 import { TypeClassDetailsDto } from '../../application/dtos/typeclass.details.dto';
+import { FindAllResult } from '../../../shared/core/FindAllResult';
 
 export class TypeclassMappers {
   public static PersistToDomain(persist: TypeclassPersistence): TypeClass {
@@ -42,6 +43,13 @@ export class TypeclassMappers {
       type: domain.type,
       createdAt: domain.createdAt,
       updatedAt: domain.updatedAt,
+    };
+  }
+
+
+  public static AllToDto(all: FindAllResult<TypeClass>): FindAllResult<TypeclassDto> {
+    return {
+      items: all.items.map(TypeclassMappers.DomainToDto),
     };
   }
 

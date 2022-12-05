@@ -8,7 +8,7 @@ import Home from './components/Home';
 import Login from './views/Login';
 import Nav from './views/Nav';
 import NotFound from './views/NotFound';
-import Profile from './components/Profile';
+import Profile from './components/Profile/Profile';
 import Register from './views/Register';
 import Resource from './components/Resource';
 import Resources from './components/Resources';
@@ -16,8 +16,8 @@ import Notifications from './components/Notifications';
 import Store from './store';
 import Tag from './components/Tag';
 import Tags from './components/Tags';
-import User from './components/User';
-import Users from './components/Users';
+import User from './components/Users/User';
+import Users from './components/Users/Users';
 import Editor from './components/Editor';
 import Panel from './components/Panel';
 import Forbidden from './views/Forbidden';
@@ -47,6 +47,17 @@ import ChooseLesson from '@/components/Lesson/ChooseLesson';
 import Lessons from '@/components/Lesson/Lessons';
 import Lesson from '@/components/Lesson/Lesson';
 import ChooseTeacher from '@/components/Teacher/ChooseTeacher';
+import Semester from '@/components/Semester/Semester';
+import Semesters from '@/components/Semester/Semesters';
+import HandleConditions from '@/components/Restrictions/HandleConditions';
+import HandleRestrictionsSimpleCount from '@/components/Restrictions/SimpleCountRestrictions';
+import ChooseRestrictionType from '@/components/Restrictions/ChooseRestrictionType';
+import CountConditionsRestrictions from '@/components/Restrictions/CountConditionsRestrictions';
+import Restrictions from '@/components/Restrictions/Restrictions';
+import BreachedRestrictions from '@/components/Restrictions/BreachedRestrictions/BreachedRestrictions';
+import BreachedRestrictionsDetails from '@/components/Restrictions/BreachedRestrictions/BreachedRestrictionsDetails';
+import DistributionRestrictions from '@/components/Restrictions/DistributionRestrictions';
+import RelationalRestrictions from '@/components/Restrictions/RelationalRestrictions';
 
 Vue.use(Router);
 
@@ -87,16 +98,13 @@ const router = new Router({
       name: 'navPage',
       component: Nav,
       meta: {
-        requiresAuth: true,
+        // requiresAuth: true,
       },
       children: [
         {
           path: '/home',
           name: 'homePage',
           component: Home,
-          meta: {
-            requiresAuth: true,
-          },
         },
         {
           path: '/universities',
@@ -104,6 +112,9 @@ const router = new Router({
           component: Universities,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -112,6 +123,9 @@ const router = new Router({
           component: University,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -120,6 +134,9 @@ const router = new Router({
           component: Faculties,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -128,6 +145,9 @@ const router = new Router({
           component: Faculty,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -136,14 +156,43 @@ const router = new Router({
           component: ChooseFaculty,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
+        {
+          path: '/semesters/',
+          name: 'semestersPage',
+          component: Semesters,
+          meta: {
+            requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
+          },
+        },
+        {
+          path: '/semester/details/:semesterId',
+          name: 'semesterPage',
+          component: Semester,
+          meta: {
+            requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
+          },
+        },
+
         {
           path: '/teacher/choose',
           name: 'chooseTeacherPage',
           component: ChooseTeacher,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -152,6 +201,9 @@ const router = new Router({
           component: Teachers,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -160,6 +212,9 @@ const router = new Router({
           component: Teacher,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -168,6 +223,9 @@ const router = new Router({
           component: ChooseLocals,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -176,6 +234,9 @@ const router = new Router({
           component: Locals,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -184,6 +245,9 @@ const router = new Router({
           component: Local,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -192,6 +256,9 @@ const router = new Router({
           component: TypeClasses,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -200,6 +267,9 @@ const router = new Router({
           component: TypeClass,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -208,6 +278,9 @@ const router = new Router({
           component: ChooseMajor,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -216,6 +289,9 @@ const router = new Router({
           component: Majors,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -224,16 +300,20 @@ const router = new Router({
           component: Major,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
-
-
         {
           path: '/lesson/choose',
           name: 'chooseLessonPage',
           component: ChooseLesson,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -242,14 +322,20 @@ const router = new Router({
           component: Lessons,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
-          path: '/lesson/:lessonId',
+          path: '/lesson/details/:lessonId',
           name: 'lessonPage',
           component: Lesson,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
 
@@ -259,6 +345,9 @@ const router = new Router({
           component: Course,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -270,11 +359,92 @@ const router = new Router({
           },
         },
         {
+          path: '/restrictions/',
+          name: 'restrictionsPage',
+          component: Restrictions,
+          meta: {
+            requiresAuth: true,
+          },
+        },
+        {
+          path: '/breached_restrictions/details/:restrictionId/:restrictionType',
+          name: 'breachedRestrictionsDetailsPage',
+          component: BreachedRestrictionsDetails,
+          meta: {
+            requiresAuth: true,
+          },
+        },
+        {
+          path: '/breached_restrictions/',
+          name: 'breachedRestrictionsPage',
+          component: BreachedRestrictions,
+          meta: {
+            requiresAuth: true,
+          },
+        },
+        {
+          path: '/restrictions/conditions',
+          name: 'restrictionsConditionsPage',
+          component: HandleConditions,
+          props: {
+            show: true,
+          },
+          meta: {
+            requiresAuth: true,
+            // requireRoles: [
+            //   Permission.RESTRICTIONS_VIEW,
+            // ],
+          },
+        },
+        {
+          path: '/restrictions/simple_count',
+          name: 'simpleCountRestrictionsPage',
+          component: HandleRestrictionsSimpleCount,
+          meta: {
+            requiresAuth: true,
+          },
+        },
+        {
+          path: '/restrictions/relational',
+          name: 'relationalRestrictionPage',
+          component: RelationalRestrictions,
+          meta: {
+            requiresAuth: true,
+          },
+        },
+        {
+          path: '/restrictions/count_conditions',
+          name: 'countConditionsRestrictionsPage',
+          component: CountConditionsRestrictions,
+          meta: {
+            requiresAuth: true,
+          },
+        },
+        {
+          path: '/restrictions/distribution_attribute',
+          name: 'distributeAttributeRestriction',
+          component: DistributionRestrictions,
+          meta: {
+            requiresAuth: true,
+          },
+        },
+        {
+          path: 'restrictions/type',
+          name: 'chooseRestrictionsTypePage',
+          component: ChooseRestrictionType,
+          meta: {
+            requiresAuth: true,
+          },
+        },
+        {
           path: '/events/:eventId',
           name: 'eventPage',
           component: Event,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -283,6 +453,9 @@ const router = new Router({
           component: Events,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
 
@@ -292,6 +465,9 @@ const router = new Router({
           component: ChooseGroup,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -300,6 +476,9 @@ const router = new Router({
           component: Group,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -308,6 +487,9 @@ const router = new Router({
           component: Groups,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -316,6 +498,9 @@ const router = new Router({
           component: ChooseDepartment,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -324,6 +509,9 @@ const router = new Router({
           component: Department,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -332,15 +520,20 @@ const router = new Router({
           component: Departments,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
-
         {
           path: '/profile',
           name: 'profilePage',
           component: Profile,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -349,6 +542,9 @@ const router = new Router({
           component: Resource,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -357,6 +553,9 @@ const router = new Router({
           component: Resources,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {
@@ -365,6 +564,9 @@ const router = new Router({
           component: Tag,
           meta: {
             requiresAuth: true,
+            requireRoles: [
+              Permission.VIEW_PANEL,
+            ],
           },
         },
         {

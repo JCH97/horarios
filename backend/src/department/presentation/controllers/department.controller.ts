@@ -1,6 +1,7 @@
-import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response } from '@nestjs/common';
+import { Body, Controller, Delete, Get, Logger, Param, Post, Put, Response, UseGuards } from '@nestjs/common';
 import {
-  CreateDepartmentUseCase, FindAllDepartmentUseCase,
+  CreateDepartmentUseCase,
+  FindAllDepartmentUseCase,
   FindByIdDepartmentUseCase,
   FindDetailsDepartmentUseCase,
   PaginatedDepartmentUseCase,
@@ -13,9 +14,10 @@ import { DepartmentPaginatedDto } from '../../application/dtos/department.pagina
 import { DepartmentUpdateDto } from '../../application/dtos/department.update.dto';
 import { DepartmentCreateDto } from '../../application/dtos/department.create.dto';
 import { DepartmentMappers } from '../../infra/mappers/department.mappers';
-import { UniversityFindAllDto } from '../../../university/application/dtos/university.find-all.dto';
-import { UniversityMapper } from '../../../university/infra/mappers/university.mapper';
 import { DepartmentFindAllDto } from '../../application/dtos/department.get-all.dto';
+import { JwtAuthGuard } from '../../../auth/application/guards/jwtAuthGuard';
+import { UserPermissions } from '../../../user/domain/enums/user.permissions';
+import { PermissionsDecorator } from '../../../auth/application/decorator/permission.decorator';
 
 @Controller('department')
 export class DepartmentController {
@@ -68,7 +70,8 @@ export class DepartmentController {
     return ProcessResponse.setResponse(res, ans, DepartmentMappers.PaginatedToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_DEPARTMENT)
   @Post('create')
   async create(@Body() body: DepartmentCreateDto, @Response() res) {
 
@@ -78,7 +81,8 @@ export class DepartmentController {
     return ProcessResponse.setResponse<Department>(res, department, DepartmentMappers.DomainToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_DEPARTMENT)
   @Put()
   async update(@Body() body: DepartmentUpdateDto, @Response() res) {
     this._logger.log('Update');
@@ -87,7 +91,8 @@ export class DepartmentController {
     return ProcessResponse.setResponse<Department>(res, department, DepartmentMappers.DomainToDto);
   }
 
-  // @UseGuards(JwtAuthGuard)
+  @UseGuards(JwtAuthGuard)
+  @PermissionsDecorator(UserPermissions.HANDLE_DEPARTMENT)
   @Delete()
   async delete(@Body() body: { id: string }, @Response() res) {
     this._logger.log('Delete');

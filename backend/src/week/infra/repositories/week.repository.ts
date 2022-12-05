@@ -12,4 +12,15 @@ export class WeekRepository extends BaseRepository<Week, WeekPersistence> implem
   constructor(@InjectRepository(WeekPersistence) _repository: Repository<WeekPersistence>) {
     super(_repository, WeekMapper.DomainToPersist, WeekMapper.PersistToDomain, 'WeekRepository');
   }
+
+
+  async findDetails(id: string): Promise<Week> {
+    const week = await this
+      ._entityRepository
+      .findOne(id, {
+        relations: ['semester'],
+      });
+
+    return WeekMapper.PersistToDomain(week);
+  }
 }

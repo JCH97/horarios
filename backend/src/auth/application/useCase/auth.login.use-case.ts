@@ -24,7 +24,7 @@ export class LoginUseCase implements IUseCase<User, Promise<LoginUseCaseResponse
     this._logger.log(`Executing. Request: ${JSON.stringify(request)}`);
 
     try {
-      const payload = { email: request.email, sub: request._id.toString(), role: request.roles };
+      const payload = { email: request.email, sub: request._id.toString(), role: request.permissions };
       const token: string = await this.jwtService.signAsync(payload);
       return right(Result.Ok({ token: token }));
     } catch (error) {

@@ -20,7 +20,7 @@
               <footer class='sticky-footer'>
                 <div class='container my-auto'>
                   <div class='copyright text-center my-auto text-dark'>
-                    <strong>Facultad de Matemática y Computación de la Universidad de La Habana &copy; 2019</strong>
+                    <strong>Facultad de Matemática y Computación de la Universidad de La Habana &copy; 2020</strong>
                   </div>
                 </div>
               </footer>

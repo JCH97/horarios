@@ -9,7 +9,7 @@ import { Local } from '../../../local/domain/entities/local.entity';
 import { Semester } from '../../../semester/domain/entities/semester.entity';
 
 type LessonProps = DomainBaseProps & DomainTimestamp & {
-  duration: number;
+  // duration: number;
   year: number;
   teacherId?: { id: string };
   teacher?: Teacher;
@@ -26,9 +26,9 @@ type newLessonProps = Omit<LessonProps,
 
 export class Lesson extends DomainEntity<LessonProps> {
 
-  get duration(): number {
-    return this.props.duration;
-  }
+  // get duration(): number {
+  //   return this.props.duration;
+  // }
 
   get year(): number {
     return this.props.year;
@@ -79,7 +79,7 @@ export class Lesson extends DomainEntity<LessonProps> {
   }
 
   get priority(): number {
-    return this.props.priority;
+    return this.props.priority ?? 1;
   }
 
   get createdAt(): Date {
@@ -112,6 +112,7 @@ export class Lesson extends DomainEntity<LessonProps> {
     this.props.description = props.description ?? this.props.description;
     this.props.fullName = props.fullName ?? this.props.fullName;
     this.props.shortName = props.shortName ?? this.props.shortName;
+    this.props.year = props.year ?? this.props.year;
 
     this.props.teacherId = props.teacherId ?? this.props.teacherId;
     this.props.majorId = props.majorId ?? this.props.majorId;

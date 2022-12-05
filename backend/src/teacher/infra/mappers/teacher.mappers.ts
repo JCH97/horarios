@@ -4,8 +4,8 @@ import { PaginatedFindResult } from '../../../shared/core/PaginatedFindResult';
 import { TeacherDto } from '../../application/dtos/teacher.dto';
 import { TeacherDetailsDto } from '../../application/dtos/teacher.details.dto';
 import { FacultyMappers } from '../../../faculty/infra/mappers/faculty.mappers';
-import { Department } from '../../../department/domain/entities/department.entity';
 import { DepartmentMappers } from '../../../department/infra/mappers/department.mappers';
+import { FindAllResult } from '../../../shared/core/FindAllResult';
 
 export class TeacherMappers {
   public static PersistToDomain(persist: TeacherPersistence): Teacher {
@@ -16,6 +16,7 @@ export class TeacherMappers {
       department:
         persist.department ? DepartmentMappers.PersistToDomain(persist.department) : null,
       departmentId: { id: persist.departmentId },
+      userId: { id: persist.userId },
     }, persist.id);
 
     if (domain.isFailure)
@@ -37,6 +38,7 @@ export class TeacherMappers {
       email: domain.email,
       faculties: domain.facultyIds,
       department: domain.departmentId,
+      user: domain.userId,
     };
   }
 
@@ -51,6 +53,13 @@ export class TeacherMappers {
       updatedAt: domain.updatedAt,
       email: domain.email,
       departmentId: domain.departmentId,
+      userId: domain.userId ?? { id: null },
+    };
+  }
+
+  public static AllToDto(all: FindAllResult<Teacher>): FindAllResult<TeacherDto> {
+    return {
+      items: all.items.map(TeacherMappers.DomainToDto),
     };
   }
 

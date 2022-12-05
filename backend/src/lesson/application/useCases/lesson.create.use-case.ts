@@ -5,7 +5,6 @@ import { Result } from '../../../shared/core/Result';
 import { Injectable, Logger } from '@nestjs/common';
 import { IUseCase } from '../../../shared/core/interfaces/IUseCase';
 import { LessonRepository } from '../../infra/repositories/lesson.repository';
-import { FindByIdFacultyUseCase } from '../../../faculty/application/useCases';
 import { LessonCreateDto } from '../dtos/lesson.create.dto';
 
 export type CreateLessonUseCaseResponse = Either<AppError.UnexpectedErrorResult<Lesson>
@@ -32,7 +31,6 @@ export class CreateLessonUseCase implements IUseCase<LessonCreateDto, Promise<Cr
       return left(lessonOrError);
 
     const lesson: Lesson = lessonOrError.unwrap();
-
     try {
       await this.lessonRepository.save(lesson);
 
