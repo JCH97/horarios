@@ -146,7 +146,7 @@ export default {
         }
       });
 
-      this.$store.state.locals.getData(token).then(result => {
+      this.$store.state.locals.getAll(token).then(result => {
         if (result === true) {
           this.locals = this.$store.state.locals.data;
           this.locals = this.locals.slice().sort((a, b) => b.shortName - a.shortName);

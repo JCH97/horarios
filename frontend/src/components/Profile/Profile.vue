@@ -75,6 +75,9 @@ export default {
     },
   },
   created() {
+
+    console.log('into profile page');
+
     this.$store.state.profile.getData().then(() => {
       this.user.username = this.$store.state.profile.data.username;
       this.user.email = this.$store.state.profile.data.email;

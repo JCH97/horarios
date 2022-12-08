@@ -51,7 +51,7 @@
         <div class='col-sm-6'>
           <div class='card text-center'>
             <div class='card-body'>
-              <h5 class='card-title text-black-50'><strong> Descripcion </strong></h5>
+              <h5 class='card-title text-black-50'><strong> Descripción </strong></h5>
               <p class='card-text'>{{ lesson.description }}</p>
             </div>
           </div>
@@ -64,7 +64,7 @@
         <div class='col-sm-6'>
           <div class='card text-center'>
             <div class='card-body'>
-              <h5 class='card-title text-black-50'><strong> Year </strong></h5>
+              <h5 class='card-title text-black-50'><strong> Año </strong></h5>
               <p class='card-text'>{{ lesson.year }}</p>
             </div>
           </div>
@@ -73,7 +73,7 @@
         <div class='col-sm-6'>
           <div class='card text-center'>
             <div class='card-body'>
-              <h5 class='card-title text-black-50'><strong> Duracion </strong></h5>
+              <h5 class='card-title text-black-50'><strong> Duración </strong></h5>
               <p class='card-text'>{{ lesson.duration }}</p>
             </div>
           </div>
@@ -138,7 +138,7 @@
                     <input type='number' class='form-control' id='input-priority' v-model='lesson.priority' />
                   </div>
                   <div class='form-group'>
-                    <label for='input-year' class='col-form-label'>Anno:</label>
+                    <label for='input-year' class='col-form-label'>Año:</label>
                     <input type='number' max='5' min='1' class='form-control' id='input-year' v-model='lesson.year'>
                   </div>
                 </div>

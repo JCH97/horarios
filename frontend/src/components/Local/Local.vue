@@ -95,7 +95,7 @@
                   <label for='input-fullName' class='col-form-label'>Nombre completo:</label>
                   <input type='text' class='form-control' id='input-fullName' v-model='local.fullName'>
                 </div>
-                <div class='form-group'>
+                <div class='col col-md-6 form-group'>
                   <label for='input-shortName' class='col-form-label'>Nombre:</label>
                   <input type='text' class='form-control' id='input-shortName' v-model='local.shortName'>
                 </div>

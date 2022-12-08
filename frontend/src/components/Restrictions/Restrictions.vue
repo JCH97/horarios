@@ -200,6 +200,8 @@ export default {
           break;
       }
 
+      this.$root.$emit('refresh_happiness');
+
     },
     comparer(prop, val) {
       return function(a, b) {

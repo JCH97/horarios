@@ -78,14 +78,14 @@
                 <input type='number' class='form-control' id='input-priority' v-model='newMajor.priority' />
               </div>
               <div class='form-group'>
-                <label for='input-duration' class='col-form-label'>Extension (annos):</label>
+                <label for='input-duration' class='col-form-label'>Extensión (años):</label>
                 <input type='number'
                        :class="{'form-control': true, 'border-danger': errors & (1 << 2)}"
                        id='input-duration'
                        v-model='newMajor.duration' />
               </div>
               <div class='form-group'>
-                <label for='input-description' class='col-form-label'>Descripcion:</label>
+                <label for='input-description' class='col-form-label'>Descripción:</label>
                 <textarea class='form-control' id='input-description' v-model='newMajor.description'></textarea>
               </div>
             </form>

@@ -42,7 +42,7 @@
         <div class='col-sm-6'>
           <div class='card text-center'>
             <div class='card-body'>
-              <h5 class='card-title text-black-50'><strong> Duracion (min) </strong></h5>
+              <h5 class='card-title text-black-50'><strong> Duración (min) </strong></h5>
               <p class='card-text'>{{ typeClass.duration }}</p>
             </div>
           </div>
@@ -73,7 +73,7 @@
         <div class='col-sm-6'>
           <div class='card text-center'>
             <div class='card-body'>
-              <h5 class='card-title text-black-50'><strong> Descripcion </strong></h5>
+              <h5 class='card-title text-black-50'><strong> Descripción </strong></h5>
               <p class='card-text'>{{ typeClass.description }}</p>
             </div>
           </div>
@@ -117,7 +117,7 @@
                 <div class='col-md-6'>
                   <div class='form-group'>
                     <div class='form-group'>
-                      <label for='input-duration' class='col-form-label'>Duracion:</label>
+                      <label for='input-duration' class='col-form-label'>Duración:</label>
                       <input type='number' class='form-control' id='input-duration' v-model='typeClass.duration' />
                     </div>
                     <div class='form-group'>
@@ -141,7 +141,7 @@
 
               </div>
               <div class='form-group'>
-                <label for='input-description' class='col-form-label'>Descripcion:</label>
+                <label for='input-description' class='col-form-label'>Descripción:</label>
                 <textarea class='form-control' id='input-description' v-model='typeClass.description'></textarea>
               </div>
 
@@ -212,7 +212,17 @@ export default {
           if (result === true) {
             this.typeClass = this.$store.state.typeClass.data;
           } else {
-            this.$router.push({ name: 'notFoundPage' });
+
+            this.$swal.fire({
+              position: 'top-end',
+              icon: 'error',
+              title: `Oops... Error`,
+              text,
+              footer: 'Facultad de Matemática y Computación. UH.',
+              timer: 5000,
+            });
+
+            // this.$router.push({ name: 'notFoundPage' });
           }
         });
     },

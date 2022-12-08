@@ -134,7 +134,7 @@
               </div>
 
               <div class='form-group'>
-                <label for='input-description' class='col-form-label'>Descripcion:</label>
+                <label for='input-description' class='col-form-label'>Descripción:</label>
                 <textarea class='form-control' id='input-description' v-model='newTeacher.description'></textarea>
               </div>
 

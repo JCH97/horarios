@@ -242,8 +242,10 @@ export default {
         ...this.newRestriction,
       })
         .then(result => {
-          if (result === true)
+          if (result === true) {
             this.$router.push({ name: 'restrictionsPage' });
+            this.$root.$emit('refresh_happiness');
+          }
           else
             this.$swal.fire({
               position: 'top-end',

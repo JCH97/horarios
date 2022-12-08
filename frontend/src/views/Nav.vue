@@ -180,7 +180,7 @@
               <i class='fa fa-bars'></i>
             </button>
             <h1 class='h2 mb-0 text-dark'>
-              Calendario Matcom
+              Sistema de Gestión de Horarios
             </h1>
             <!-- Topbar Navbar -->
             <ul class='navbar-nav ml-auto'>
@@ -275,10 +275,10 @@
                       <i class='fas fa-user fa-sm fa-fw mr-2 text-gray-400'></i>
                       Perfil
                     </router-link>
-                    <router-link v-if='viewPanel()' :to="{name: 'panelPage'}" class='dropdown-item'>
-                      <i class='fas fa-edit fa-sm fa-fw mr-2 text-gray-400'></i>
-                      Administrar
-                    </router-link>
+                    <!--                    <router-link v-if='viewPanel()' :to="{name: 'panelPage'}" class='dropdown-item'>-->
+                    <!--                      <i class='fas fa-edit fa-sm fa-fw mr-2 text-gray-400'></i>-->
+                    <!--                      Administrar-->
+                    <!--                    </router-link>-->
                     <!-- <a class="dropdown-item" href="#">
                         <i class="fas fa-cogs fa-sm fa-fw mr-2 text-gray-400"></i>
                         Configuración
@@ -378,6 +378,8 @@ export default {
   },
   methods: {
     getHappiness() {
+      console.log('into refresh happiness');
+
       this.$store.state.restrictions.getHappiness({})
         .then(result => {
           if (result === true) {

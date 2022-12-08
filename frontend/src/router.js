@@ -531,9 +531,9 @@ const router = new Router({
           component: Profile,
           meta: {
             requiresAuth: true,
-            requireRoles: [
-              Permission.VIEW_PANEL,
-            ],
+            // requireRoles: [
+            //   Permission.VIEW_PANEL,
+            // ],
           },
         },
         {

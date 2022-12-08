@@ -1060,7 +1060,7 @@ export default {
         title: `Oops... ${title}`,
         text,
         footer: 'Facultad de Matemática y Computación. UH.',
-        timer: 5000,
+        timer: 30000,
       });
     },
 
@@ -1090,7 +1090,7 @@ export default {
       this.errors |= (Object.keys(this.newClass.typeClassId).length === 0) ? (1 << 4) : this.errors;
       this.errors |= (this.selectedGroup === '') ? (1 << 5) : this.errors;
       this.errors |= (this.newClass.inSerie && !this.selectedClassFrequency.val) ? (1 << 6) : this.errors;
-      this.errors |= (this.daysOfWeek.every(x => !x.selected)) ? (1 << 7) : this.errors;
+      this.errors |= (this.newClass.inSerie && this.daysOfWeek.every(x => !x.selected)) ? (1 << 7) : this.errors;
 
       setTimeout(() => {
         this.errors = 0;
@@ -1100,6 +1100,7 @@ export default {
     },
 
     emitEventForRefreshingHappiness() {
+      console.log('emit event for refresh happiness');
       this.$root.$emit('refresh_happiness');
     },
 
@@ -1161,6 +1162,9 @@ export default {
         this.newClass.frequency = ClassFrequency[this.selectedClassFrequency.val];
         this.newClass.days = days;
 
+        const freezeClass = Object.assign({}, this.newClass);
+        Object.freeze(freezeClass);
+
         this.$store.state.classes.createInSerie(token, this.newClass)
           .then(result => {
             if (result === true) {
@@ -1170,31 +1174,19 @@ export default {
               for (let i = 0; i < data.length; ++i) {
                 const d = data[i];
 
-                this.classes.push({
-                  ...this.newClass,
+                const x = {
+                  ...freezeClass,
                   fullName: title,
                   shortName: subTitle,
                   id: d.id,
                   start: d.start,
                   end: d.end,
                   color: d.color,
-                });
+                };
 
-                //   this.newClass.id = d.id;
-                //   this.newClass.start = d.start;
-                //   this.newClass.end = d.end;
-                //
-                //   this.addEvent(
-                //     d.id,
-                //     subTitle,
-                //     d.start,
-                //     d.end,
-                //     selectInfo.allDay,
-                //     this.newClass,
-                //     selectInfo,
-                //     d.color);
+                this.classes.push(x);
+
               }
-
               this.updateEventsInCalendar();
               this.emitEventForRefreshingHappiness();
 

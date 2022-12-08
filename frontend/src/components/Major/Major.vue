@@ -51,7 +51,7 @@
         <div class='col-sm-6'>
           <div class='card text-center'>
             <div class='card-body'>
-              <h5 class='card-title text-black-50'><strong> Descripcion </strong></h5>
+              <h5 class='card-title text-black-50'><strong> Descripción </strong></h5>
               <p class='card-text'>{{ major.description }}</p>
             </div>
           </div>
@@ -62,7 +62,7 @@
         <div class='col-sm-6'>
           <div class='card text-center'>
             <div class='card-body'>
-              <h5 class='card-title text-black-50'><strong> Duracion </strong></h5>
+              <h5 class='card-title text-black-50'><strong> Duración </strong></h5>
               <p class='card-text'>{{ major.duration }}</p>
             </div>
           </div>
@@ -106,11 +106,11 @@
                 <input type='number' class='form-control' id='input-priority' v-model='major.priority' />
               </div>
               <div class='form-group'>
-                <label for='input-duration' class='col-form-label'>Extension (annos):</label>
+                <label for='input-duration' class='col-form-label'>Extensión (años):</label>
                 <input type='number' class='form-control' id='input-duration' v-model='major.duration' />
               </div>
               <div class='form-group'>
-                <label for='input-description' class='col-form-label'>Descripcion:</label>
+                <label for='input-description' class='col-form-label'>Descripción:</label>
                 <textarea class='form-control' id='input-description' v-model='major.description'></textarea>
               </div>
             </form>

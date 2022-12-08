@@ -51,7 +51,7 @@
         <div class='col-sm-6'>
           <div class='card text-center'>
             <div class='card-body'>
-              <h5 class='card-title text-black-50'><strong> Descripcion </strong></h5>
+              <h5 class='card-title text-black-50'><strong> Descripción </strong></h5>
               <p class='card-text'>{{ teacher.description }}</p>
             </div>
           </div>
@@ -60,7 +60,7 @@
         <div class='col-sm-6 py-4'>
           <div class='card text-center'>
             <div class='card-body'>
-              <h5 class='card-title text-black-50'><strong> Email </strong></h5>
+              <h5 class='card-title text-black-50'><strong> Correo </strong></h5>
               <p class='card-text'>{{ teacher.email }}</p>
             </div>
           </div>
